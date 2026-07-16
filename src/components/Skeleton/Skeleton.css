@@ -1,0 +1,63 @@
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--skeleton-color);
+}
+
+/* Pulse animation */
+.skeleton-pulse {
+  animation: skeleton-pulse var(--skeleton-duration) ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+
+/* Fade animation */
+.skeleton-fade {
+  animation: skeleton-fade var(--skeleton-duration) ease-in-out infinite;
+}
+
+@keyframes skeleton-fade {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+
+/* Wave animation */
+.skeleton-wave::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  transform: translateX(-100%);
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--skeleton-highlight),
+    transparent
+  );
+
+  animation: skeleton-wave var(--skeleton-duration) infinite;
+}
+
+@keyframes skeleton-wave {
+  100% {
+    transform: translateX(100%);
+  }
+}
