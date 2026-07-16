@@ -1,75 +1,291 @@
-# React + TypeScript + Vite
+<div align="center">
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# AutoSkeleton
 
-Currently, two official plugins are available:
+**Beautiful, composable loading skeletons for React.**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Lightweight • TypeScript First • Customizable • Tree-shakable
 
-## React Compiler
+</div>
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+##  Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+-  Beautiful default skeletons
+-  Lightweight and fast
+-  Fully composable components
+-  TypeScript first
+-  Multiple animation styles
+-  Global and local theming
+-  Tree-shakable
+-  Accessibility friendly
+-  Zero configuration
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install @autoskeleton/react
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+or
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+yarn add @autoskeleton/react
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+or
+
+```bash
+pnpm add @autoskeleton/react
+```
+
+---
+
+# Quick Start
+
+```tsx
+import { Skeleton } from "@autoskeleton/react";
+
+export default function App() {
+  return (
+    <Skeleton
+      width={200}
+      height={20}
+    />
+  );
+}
+```
+
+No provider required.
+
+AutoSkeleton works out of the box.
+
+---
+
+# Components
+
+## Skeleton
+
+```tsx
+<Skeleton />
+```
+
+Basic loading placeholder.
+
+---
+
+## TextSkeleton
+
+```tsx
+<TextSkeleton />
+```
+
+Generate multiple text lines.
+
+---
+
+## AvatarSkeleton
+
+```tsx
+<AvatarSkeleton />
+```
+
+Circular avatar placeholder.
+
+---
+
+## ImageSkeleton
+
+```tsx
+<ImageSkeleton />
+```
+
+Responsive image placeholder.
+
+---
+
+## ButtonSkeleton
+
+```tsx
+<ButtonSkeleton />
+```
+
+Button loading placeholder.
+
+---
+
+## CardSkeleton
+
+```tsx
+<CardSkeleton />
+```
+
+Complete loading card built from primitive components.
+
+---
+
+## SkeletonGroup
+
+```tsx
+<SkeletonGroup gap={16}>
+    <AvatarSkeleton />
+
+    <TextSkeleton />
+</SkeletonGroup>
+```
+
+Arrange skeletons while applying local theme overrides.
+
+---
+
+## SkeletonProvider
+
+```tsx
+<SkeletonProvider animation="pulse">
+    <App />
+</SkeletonProvider>
+```
+
+Globally customize the loading theme.
+
+Using the provider is optional.
+
+---
+
+# Animations
+
+```tsx
+<Skeleton animation="wave" />
+
+<Skeleton animation="pulse" />
+
+<Skeleton animation="fade" />
+
+<Skeleton animation="none" />
+```
+
+---
+
+# Variants
+
+```tsx
+<Skeleton variant="rectangle" />
+
+<Skeleton variant="rounded" />
+
+<Skeleton variant="circle" />
+
+<Skeleton variant="pill" />
+```
+
+---
+
+# Theming
+
+Global theme:
+
+```tsx
+<SkeletonProvider
+    animation="pulse"
+    color="#E5E7EB"
+    highlight="#F8FAFC"
+>
+    <App />
+</SkeletonProvider>
+```
+
+Local override:
+
+```tsx
+<SkeletonGroup
+    animation="wave"
+    gap={20}
+>
+    <TextSkeleton />
+</SkeletonGroup>
+```
+
+---
+
+# Why AutoSkeleton?
+
+Most skeleton libraries provide only low-level placeholder components.
+
+AutoSkeleton provides both:
+
+- Primitive components
+- Composite loading components
+
+Everything is built through composition.
 
 ```
+Skeleton
+        │
+        ▼
+TextSkeleton
+        │
+        ▼
+CardSkeleton
+```
+
+This keeps the library flexible while avoiding duplicated rendering logic.
+
+---
+
+# Built With
+
+- React
+- TypeScript
+- CSS
+- React Context
+
+---
+
+# Documentation
+
+- 📖 DESIGN.md
+- 🏗 ARCHITECTURE.md
+- 📚 SPECIFICATION.md
+
+---
+
+# Roadmap
+
+- ✅ Skeleton
+- ✅ TextSkeleton
+- ✅ AvatarSkeleton
+- ✅ ImageSkeleton
+- ✅ ButtonSkeleton
+- ✅ CardSkeleton
+- ⏳ ProfileSkeleton
+- ⏳ ArticleSkeleton
+- ⏳ TableSkeleton
+- ⏳ DashboardSkeleton
+- ⏳ Storybook
+- ⏳ Unit Tests
+- ⏳ Visual Regression Tests
+
+---
+
+# Contributing
+
+Contributions, issues, and feature requests are welcome.
+
+Please read the documentation before submitting a pull request.
+
+---
+
+# License
+
+MIT License.
+
+---
+
+<div align="center">
+
+Made with love using React and TypeScript.
+
+</div>
