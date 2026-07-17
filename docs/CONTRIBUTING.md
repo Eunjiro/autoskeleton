@@ -58,7 +58,7 @@ Not every contribution needs to involve code.
 Clone the repository.
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/autoskeleton.git
+git clone https://github.com/Eunjiro/autoskeleton.git
 ```
 
 Install dependencies.
