@@ -1,17 +1,44 @@
 {
-  "name": "autoskeleton",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@gyojiro/autoskeleton-react",
+  "version": "0.1.0",
+  "description": "Beautiful, composable loading skeletons for React.",
+  "license": "MIT",
   "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+  ".": {
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
+  }
+},
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "keywords": [
+    "react",
+    "skeleton",
+    "loading",
+    "placeholder",
+    "typescript",
+    "ui",
+    "component-library"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -23,8 +50,18 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
+    "rollup-plugin-dts": "^6.4.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.62.0",
-    "vite": "^8.1.1"
-  }
+    "vite": "^8.1.1",
+    "vite-plugin-dts": "^5.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eunjiro/autoskeleton.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Eunjiro/autoskeleton/issues"
+  },
+  "homepage": "https://github.com/Eunjiro/autoskeleton#readme"
 }

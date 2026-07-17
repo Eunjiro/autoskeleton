@@ -19,6 +19,7 @@ export function CardSkeleton({
   avatarSize = 48,
 
   lines = 3,
+  lastLineWidth = "70%",
 
   ...groupProps
 }: CardSkeletonProps) {
@@ -36,7 +37,7 @@ export function CardSkeleton({
           <AvatarSkeleton size={avatarSize} />
         )}
 
-        <TextSkeleton lines={lines} />
+        <TextSkeleton lines={lines} lastLineWidth={lastLineWidth} />
 
         
 

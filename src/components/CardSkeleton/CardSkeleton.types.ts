@@ -17,4 +17,6 @@ export interface CardSkeletonProps
   avatarSize?: number;
 
   lines?: number;
+
+  lastLineWidth?: number | string;
 }

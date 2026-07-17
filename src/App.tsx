@@ -4,28 +4,56 @@
 // import { Skeleton } from "./components/Skeleton/Skeleton";
 // import { SkeletonGroup } from "./components/SkeletonGroup";
 // import { TextSkeleton } from "./components/TextSkeleton/TextSkeleton";
-// import { CardSkeleton } from "./components/CardSkeleton";
+import { CardSkeleton } from "./components/CardSkeleton";
 
 function App() {
   return (
     <div style={{ padding: 16 }}>
+      <div style={{ marginBottom: 16, width: 400 }}>
+        <CardSkeleton
+          direction="row"
+          imageWidth={180}
+          gap={16}
+          />
+      </div>
 
-      {/* <CardSkeleton
-        direction="row"
-        imageWidth={180}
-      />
-      <CardSkeleton
-        lines={5}
-      />
+      <hr></hr>
+    
+      <div style={{ marginBottom: 16, width: 400 }}>
+        <CardSkeleton
+          lines={5}
+          lastLineWidth="100%"
+          gap={16}
+        />
+      </div>
+
+      <hr></hr>
+
+      <div style={{ marginBottom: 16, width: 400 }}>
       <CardSkeleton
         showImage={false}
         showAvatar
+        gap={16}
       /> 
+      </div>
+
+      <hr></hr>
+
+      <div style={{ marginBottom: 16, width: 400 }}>
       <CardSkeleton
         showAvatar={false}
+        gap={16}
+        
       />
-      
-      <CardSkeleton /> */}
+      </div>
+
+      <hr></hr>
+
+      <div style={{ marginBottom: 16, width: 400 }}>
+        <CardSkeleton 
+          gap={16}
+        />
+      </div>
 
 
         {/* <SkeletonGroup animation="pulse" gap={100}>
