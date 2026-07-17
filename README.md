@@ -4,7 +4,7 @@
 
 A modern skeleton loading library built with React + TypeScript.
 
-Create beautiful loading states with primitive skeletons or ready-made components like cards, avatars, text blocks, and images.
+Create beautiful loading states with primitive skeleton components or ready-made components like cards, avatars, text blocks, images, and custom layouts.
 
 Lightweight • TypeScript First • Customizable • Tree-shakable
 
@@ -17,7 +17,7 @@ Lightweight • TypeScript First • Customizable • Tree-shakable
 🧩 Fully composable components  
 🔷 TypeScript first  
 🎨 Customizable themes  
-🌊 Multiple animations  
+🌊 Multiple animation styles  
 🌳 Tree-shakable  
 ♿ Accessibility friendly  
 🚀 Zero configuration required  
@@ -44,74 +44,113 @@ pnpm add @gyojiro/autoskeleton-react
 
 ---
 
+# Setup
+
+Import the AutoSkeleton stylesheet once in your application:
+
+```tsx
+import "@gyojiro/autoskeleton-react/dist/index.css";
+```
+
+After that, all components are ready to use.
+
+---
+
 # Quick Start
 
 ```tsx
 import {
-  Skeleton
+  Skeleton,
+  TextSkeleton,
+  AvatarSkeleton,
+  CardSkeleton
 } from "@gyojiro/autoskeleton-react";
+
 
 export default function App() {
 
   return (
-    <Skeleton
-      width={300}
-      height={20}
-    />
+    <div>
+
+      <Skeleton
+        width={300}
+        height={20}
+      />
+
+      <TextSkeleton
+        lines={4}
+      />
+
+      <AvatarSkeleton
+        size={60}
+      />
+
+      <CardSkeleton />
+
+    </div>
   );
 
 }
 ```
 
-AutoSkeleton works immediately without any setup.
+AutoSkeleton works immediately without any required setup.
 
 ---
 
 # Real Data Loading Example
 
-AutoSkeleton is designed for real loading states.
+AutoSkeleton is designed for real application loading states.
 
 Example:
 
 ```tsx
+import { useEffect, useState } from "react";
+
+import {
+  CardSkeleton
+} from "@gyojiro/autoskeleton-react";
+
+
 function UserProfile(){
 
-const [user,setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
 
-useEffect(()=>{
+  useEffect(() => {
 
-fetch("/api/user")
-.then(res=>res.json())
-.then(data=>setUser(data))
+    fetch("/api/user")
+      .then(res => res.json())
+      .then(data => setUser(data));
 
-},[]);
-
-
-if(!user){
-
-return (
-<CardSkeleton />
-)
-
-}
+  }, []);
 
 
-return (
 
-<div>
+  if(!user){
 
-<h2>
-{user.name}
-</h2>
+    return (
+      <CardSkeleton />
+    );
 
-<p>
-{user.email}
-</p>
+  }
 
-</div>
 
-)
+
+  return (
+
+    <div>
+
+      <h2>
+        {user.name}
+      </h2>
+
+      <p>
+        {user.email}
+      </p>
+
+    </div>
+
+  );
 
 }
 ```
@@ -132,40 +171,58 @@ Real Content
 
 # Components
 
-## Skeleton
+# Skeleton
 
 The core primitive component.
 
-```tsx
-<Skeleton
- width={200}
- height={20}
-/>
-```
+Everything in AutoSkeleton is built from this component.
 
-Props:
+Example:
 
 ```tsx
 <Skeleton
+  width={300}
+  height={20}
+/>
+```
 
-width="100%"
+## Props
 
-height={20}
+```tsx
+<Skeleton
 
-variant="default"
+  width="100%"
 
-animation="wave"
+  height={20}
 
-radius="md"
+  variant="default"
+
+  animation="wave"
+
+  radius="md"
 
 />
 ```
+
+Available options:
+
+| Prop | Description |
+|---|---|
+| width | Skeleton width |
+| height | Skeleton height |
+| size | Used for circle skeletons |
+| variant | Shape of skeleton |
+| animation | Loading animation |
+| radius | Border radius |
+| style | Custom CSS styles |
 
 ---
 
 # TextSkeleton
 
-Generate loading text blocks.
+Generate multiple text loading blocks.
+
+Basic:
 
 ```tsx
 <TextSkeleton />
@@ -175,18 +232,48 @@ Multiple lines:
 
 ```tsx
 <TextSkeleton
- lines={5}
+  lines={5}
 />
 ```
 
-Random text widths:
+Custom spacing:
 
 ```tsx
 <TextSkeleton
 
-lines={5}
+  lines={5}
 
-randomizeWidths
+  gap={12}
+
+  lineHeight={18}
+
+/>
+```
+
+Short last line:
+
+```tsx
+<TextSkeleton
+
+  lines={5}
+
+  lastLineWidth="60%"
+
+/>
+```
+
+Random widths:
+
+```tsx
+<TextSkeleton
+
+  lines={5}
+
+  randomizeWidths
+
+  minLineWidth={50}
+
+  maxLineWidth={90}
 
 />
 ```
@@ -194,20 +281,29 @@ randomizeWidths
 Example output:
 
 ```
-██████████████
+████████████████
 
 ████████████
 
-████████████████
+███████████████
 
-████████
+███████
 ```
+
+Useful for:
+
+- Articles
+- Comments
+- User descriptions
+- Messages
 
 ---
 
 # AvatarSkeleton
 
 Circular user avatar loading.
+
+Basic:
 
 ```tsx
 <AvatarSkeleton />
@@ -217,15 +313,25 @@ Custom size:
 
 ```tsx
 <AvatarSkeleton
- size={80}
+
+  size={80}
+
 />
 ```
+
+Useful for:
+
+- Profiles
+- User cards
+- Chat applications
 
 ---
 
 # ImageSkeleton
 
-Image placeholder.
+Responsive image placeholder.
+
+Basic:
 
 ```tsx
 <ImageSkeleton />
@@ -236,18 +342,39 @@ Custom dimensions:
 ```tsx
 <ImageSkeleton
 
-width="100%"
+  width="100%"
 
-height={300}
+  height={300}
 
 />
 ```
+
+Using aspect ratio:
+
+```tsx
+<ImageSkeleton
+
+  width="100%"
+
+  aspectRatio="16/9"
+
+/>
+```
+
+Useful for:
+
+- Product images
+- Video thumbnails
+- Blog covers
+- Galleries
 
 ---
 
 # ButtonSkeleton
 
 Button loading state.
+
+Basic:
 
 ```tsx
 <ButtonSkeleton />
@@ -258,68 +385,128 @@ Custom size:
 ```tsx
 <ButtonSkeleton
 
-width={150}
+  width={150}
 
-height={45}
+  height={45}
 
 />
 ```
+
+Useful for:
+
+- Forms
+- Authentication pages
+- Action buttons
 
 ---
 
 # CardSkeleton
 
-Complete card loading UI.
+Complete loading card UI.
+
+Basic:
 
 ```tsx
 <CardSkeleton />
 ```
 
-Example:
+With avatar:
 
 ```tsx
 <CardSkeleton
 
-showAvatar
-
-showButton
-
-lines={4}
+  showAvatar
 
 />
 ```
 
-Output:
+Full card:
+
+```tsx
+<CardSkeleton
+
+  showImage
+
+  showAvatar
+
+  showButton
+
+  lines={4}
+
+/>
+```
+
+Example output:
 
 ```
++----------------+
+
 [ IMAGE ]
 
 [ AVATAR ]
 
-████████████
+██████████████
 
-████████
+██████████
 
 ██████
 
 
 [ BUTTON ]
+
++----------------+
+```
+
+CardSkeleton is built using:
+
+```
+ImageSkeleton
+AvatarSkeleton
+TextSkeleton
+ButtonSkeleton
+SkeletonGroup
 ```
 
 ---
 
 # SkeletonGroup
 
-Create your own skeleton layouts.
+Create custom skeleton layouts.
+
+Example:
 
 ```tsx
-<SkeletonGroup gap={16}>
+<SkeletonGroup
 
-<AvatarSkeleton/>
+  gap={16}
 
-<TextSkeleton lines={3}/>
+>
 
-<ButtonSkeleton/>
+  <AvatarSkeleton />
+
+  <TextSkeleton
+    lines={3}
+  />
+
+  <ButtonSkeleton />
+
+</SkeletonGroup>
+```
+
+Change direction:
+
+```tsx
+<SkeletonGroup
+
+  direction="row"
+
+  gap={20}
+
+>
+
+  <CardSkeleton />
+
+  <CardSkeleton />
 
 </SkeletonGroup>
 ```
@@ -335,16 +522,18 @@ Useful for:
 
 # SkeletonProvider
 
-Customize your application skeleton theme.
+Customize the global skeleton theme.
+
+Example:
 
 ```tsx
 <SkeletonProvider
 
-animation="pulse"
+  animation="pulse"
 
-color="#E5E7EB"
+  color="#E5E7EB"
 
-highlight="#F8FAFC"
+  highlight="#F8FAFC"
 
 >
 
@@ -354,6 +543,8 @@ highlight="#F8FAFC"
 ```
 
 Provider is optional.
+
+Without a provider, AutoSkeleton uses default settings.
 
 ---
 
@@ -394,15 +585,15 @@ Global theme:
 ```tsx
 <SkeletonProvider
 
-color="#ddd"
+  color="#ddd"
 
-highlight="#fff"
+  highlight="#fff"
 
-duration={1.5}
+  duration={1.5}
 
-radius="lg"
+  radius="lg"
 
-animation="wave"
+  animation="wave"
 
 >
 
@@ -418,13 +609,13 @@ Local override:
 ```tsx
 <SkeletonGroup
 
-animation="pulse"
+  animation="pulse"
 
-gap={20}
+  gap={20}
 
 >
 
-<TextSkeleton/>
+<TextSkeleton />
 
 </SkeletonGroup>
 ```
@@ -435,28 +626,37 @@ gap={20}
 
 Most skeleton libraries only provide:
 
-```
+```tsx
 <Skeleton />
 ```
 
-and developers manually build every loading screen.
+Developers then manually build every loading state.
 
-AutoSkeleton provides:
+AutoSkeleton provides both:
+
+## Primitive Components
 
 ```
-Primitive Components
-        |
-        |
-        v
+Skeleton
+```
 
-Composite Components
+and:
 
+## Composite Components
+
+```
 TextSkeleton
+
 AvatarSkeleton
-CardSkeleton
+
 ImageSkeleton
-DashboardSkeleton
+
+ButtonSkeleton
+
+CardSkeleton
 ```
+
+Everything is created through composition.
 
 Benefits:
 
@@ -470,42 +670,58 @@ Benefits:
 
 # Example Use Cases
 
-AutoSkeleton works well for:
-
 ## User Profiles
 
 ```tsx
-<CardSkeleton showAvatar/>
+<CardSkeleton
+
+  showAvatar
+
+/>
 ```
+
+---
 
 ## Blog Articles
 
 ```tsx
-<TextSkeleton lines={8}/>
+<TextSkeleton
+
+  lines={8}
+
+/>
 ```
+
+---
 
 ## Dashboards
 
 ```tsx
-<SkeletonGroup>
+<SkeletonGroup
 
-<CardSkeleton/>
+  direction="row"
 
-<CardSkeleton/>
+>
 
-<CardSkeleton/>
+<CardSkeleton />
+
+<CardSkeleton />
+
+<CardSkeleton />
 
 </SkeletonGroup>
 ```
 
+---
+
 ## Ecommerce Products
 
 ```tsx
-<ImageSkeleton/>
+<ImageSkeleton />
 
-<TextSkeleton/>
+<TextSkeleton />
 
-<ButtonSkeleton/>
+<ButtonSkeleton />
 ```
 
 ---
@@ -533,31 +749,24 @@ AutoSkeleton works well for:
 ✅ SkeletonGroup  
 ✅ Theme Provider  
 
+---
 
 ## Planned
 
-⏳ ProfileSkeleton
-
-⏳ ArticleSkeleton
-
-⏳ TableSkeleton
-
-⏳ DashboardSkeleton
-
-⏳ FormSkeleton
-
-⏳ Storybook Documentation
-
-⏳ Unit Tests
-
-⏳ Visual Regression Testing
-
+⏳ ProfileSkeleton  
+⏳ ArticleSkeleton  
+⏳ TableSkeleton  
+⏳ DashboardSkeleton  
+⏳ FormSkeleton  
+⏳ Storybook Documentation  
+⏳ Unit Tests  
+⏳ Visual Regression Testing  
 
 ---
 
 # Documentation
 
-More documentation:
+Additional documentation:
 
 - DESIGN.md
 - ARCHITECTURE.md
