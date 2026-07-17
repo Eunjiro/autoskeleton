@@ -1,3 +1,5 @@
+import "./index.css";
+
 export * from "./context/SkeletonProvider";
 
 export * from "./components/Skeleton";
