@@ -1,261 +1,117 @@
 # Contributing to AutoSkeleton
 
-First off, thank you for considering contributing to AutoSkeleton!
-
-Whether you're fixing a bug, improving documentation, suggesting a feature, or writing code, every contribution helps make the project better.
+Thank you for considering contributing to AutoSkeleton!
 
 ---
 
-# Table of Contents
-
-- Code of Conduct
-- Ways to Contribute
-- Development Setup
-- Project Structure
-- Coding Guidelines
-- Pull Request Process
-- Reporting Bugs
-- Suggesting Features
-- Questions
-
----
-
-# Code of Conduct
-
-Please be respectful and constructive.
-
-We aim to build an inclusive and welcoming community.
-
-Examples of positive behavior include:
-
-- Respectful communication
-- Constructive feedback
-- Helping new contributors
-- Being patient during reviews
-
----
-
-# Ways to Contribute
-
-You can contribute by:
-
-- Fixing bugs
-- Improving documentation
-- Creating new skeleton components
-- Improving accessibility
-- Improving performance
-- Writing tests
-- Creating Storybook examples
-- Reporting issues
-- Suggesting new features
-
-Not every contribution needs to involve code.
-
----
-
-# Development Setup
-
-Clone the repository.
+## Development Setup
 
 ```bash
 git clone https://github.com/Eunjiro/autoskeleton.git
-```
-
-Install dependencies.
-
-```bash
+cd autoskeleton
 npm install
 ```
 
-Start the development server.
+---
 
-```bash
-npm run dev
-```
+## Scripts
 
-Build the library.
-
-```bash
-npm run build
-```
+| Script | Description |
+|---|---|
+| `npm run dev` | Start Vite dev server |
+| `npm run build` | Type-check + build to `dist/` |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run unit tests (single run) |
+| `npm run test:watch` | Watch mode |
+| `npm run test:coverage` | Coverage report |
+| `npm run test:storybook` | Storybook story tests via Vitest |
+| `npm run storybook` | Launch Storybook at localhost:6006 |
+| `npm run build-storybook` | Build static Storybook |
 
 ---
 
-# Project Structure
+## Project Structure
 
 ```
 src/
+  components/     All component implementations
+  context/        SkeletonContext + SkeletonProvider
+  hooks/          useSkeleton
+  constants/      DEFAULT_THEME, DARK_THEME
+  types/          theme.types.ts
+  index.ts        Public barrel export
 
-components/
-
-context/
-
-hooks/
-
-constants/
-
-types/
+src/test/         Vitest + RTL unit tests
+stories/          Storybook stories
+docs/             Documentation
+.storybook/       Storybook configuration
 ```
 
-Each component owns:
-
-- implementation
-- types
-- utilities
-- styles
-- exports
+Each component owns its own folder: `ComponentName.tsx`, `ComponentName.types.ts`, `index.ts`.
 
 ---
 
-# Coding Guidelines
+## Coding Guidelines
 
-## TypeScript
+### TypeScript
+- Use TypeScript; avoid `any`
+- Import types with `import type` (`verbatimModuleSyntax` is enabled)
+- Add JSDoc to all public props and exported types
 
-Use TypeScript for all source files.
+### Components
+- Wrap all components with `React.memo`
+- Use `useMemo` for derived theme objects in providers and groups
+- Compose from existing primitives — never duplicate rendering logic
 
-Avoid using `any`.
+### Styling
+- CSS animations only — no JavaScript animations
+- Use CSS custom properties (`--skeleton-*`) for theme values
+- All animations must respect `prefers-reduced-motion`
 
-Prefer explicit types.
+### Naming
+- Components: `PascalCase`
+- Props: `camelCase`
+- Constants: `UPPER_SNAKE_CASE`
 
----
-
-## Components
-
-Each component should live inside its own folder.
-
-Example:
-
-```
-ButtonSkeleton/
-
-ButtonSkeleton.tsx
-
-ButtonSkeleton.types.ts
-
-ButtonSkeleton.css
-
-index.ts
-```
+### Accessibility
+- Skeletons are decorative by default (`aria-hidden="true"`)
+- Support `aria-label` + `role="status"` for meaningful loading regions
+- No interactive elements or keyboard focus in skeleton components
 
 ---
 
-## Reuse Existing Components
+## Adding a New Component
 
-Avoid duplicating rendering logic.
-
-Instead of creating new placeholder implementations, compose existing primitives.
-
-Good:
-
-```
-CardSkeleton
-
-↓
-
-TextSkeleton
-
-↓
-
-Skeleton
-```
-
-Bad:
-
-```
-CardSkeleton
-
-↓
-
-Custom rectangle implementation
-```
+1. Create `src/components/MyNewSkeleton/`
+2. Add `MyNewSkeleton.tsx` — `React.memo`, composed from primitives
+3. Add `MyNewSkeleton.types.ts` — JSDoc on all props
+4. Add `index.ts` barrel export
+5. Export from `src/index.ts`
+6. Add tests in `src/test/`
+7. Add a Storybook story in `stories/`
 
 ---
 
-## Styling
+## Pull Request Process
 
-Prefer CSS for animations.
-
-Avoid JavaScript-based animations.
-
----
-
-## Naming
-
-Components:
-
-```
-PascalCase
-```
-
-Props:
-
-```
-camelCase
-```
-
-Constants:
-
-```
-UPPER_CASE
-```
+- Build passes: `npm run build`
+- Lint passes: `npm run lint`
+- All tests pass: `npm test`
+- Keep PRs focused on a single change
+- Update documentation when necessary
 
 ---
 
-# Pull Requests
+## Reporting Bugs
 
-Before opening a pull request:
-
-- Ensure the project builds successfully.
-- Follow the existing coding style.
-- Keep pull requests focused.
-- Update documentation when necessary.
-- Add tests when applicable.
+Include: AutoSkeleton version, React version, TypeScript version, browser, steps to reproduce, expected vs actual behavior.
 
 ---
 
-# Reporting Bugs
+## Suggesting Features
 
-Please include:
-
-- React version
-- Browser
-- TypeScript version
-- Steps to reproduce
-- Expected behavior
-- Actual behavior
-
-Screenshots are appreciated.
+Check existing issues, explain the use case, describe the proposed API, and explain why it belongs in AutoSkeleton.
 
 ---
 
-# Suggesting Features
-
-Before requesting a feature:
-
-- Check existing issues.
-- Explain the use case.
-- Describe the proposed API.
-- Explain why it belongs in AutoSkeleton.
-
----
-
-# Documentation
-
-Documentation improvements are always welcome.
-
-Examples:
-
-- Better examples
-- Improved explanations
-- Fixing typos
-- API clarification
-
----
-
-# Questions
-
-If you're unsure where to start, open an issue and we'll be happy to help.
-
----
-
-Thank you for helping improve AutoSkeleton ❤️
+Thank you for helping improve AutoSkeleton.

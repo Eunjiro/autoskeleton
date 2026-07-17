@@ -1,47 +1,42 @@
 # AutoSkeleton Design
 
-> **Version:** Draft v1.0
+> **Version:** 0.1.5
 >
 > This document describes the design philosophy, goals, and guiding principles behind AutoSkeleton.
 
 ---
 
-# Table of Contents
+## Table of Contents
 
-1. Introduction
-2. Vision
-3. Design Goals
-4. Non-Goals
-5. Core Principles
-6. Component Philosophy
-7. Composition Philosophy
-8. Theming Philosophy
-9. Developer Experience
-10. API Design
-11. Naming Conventions
-12. Performance Philosophy
-13. Accessibility
-14. Future Vision
+1. [Introduction](#introduction)
+2. [Vision](#vision)
+3. [Design Goals](#design-goals)
+4. [Non-Goals](#non-goals)
+5. [Core Principles](#core-principles)
+6. [Component Philosophy](#component-philosophy)
+7. [Theming Philosophy](#theming-philosophy)
+8. [Developer Experience](#developer-experience)
+9. [API Design](#api-design)
+10. [Performance Philosophy](#performance-philosophy)
+11. [Accessibility](#accessibility)
 
 ---
 
-# Introduction
+## Introduction
 
-AutoSkeleton is a lightweight React library for building beautiful, reusable loading skeletons.
+AutoSkeleton is a production-ready React library for building beautiful, reusable loading skeletons. It provides a complete design system for loading states through composable primitives and higher-level components.
 
-Unlike traditional skeleton libraries that only expose low-level placeholders, AutoSkeleton provides a complete design system for loading states through composable primitives and higher-level components.
-
-The library is designed around one principle:
+The library is built around one principle:
 
 > Every loading UI should be easy to build, customize, and maintain.
 
 ---
 
-# Vision
+## Vision
 
 Our vision is to become the most developer-friendly skeleton loading library for React.
 
-AutoSkeleton aims to provide:
+AutoSkeleton provides:
 
 - Beautiful default components
 - Powerful customization
@@ -51,381 +46,185 @@ AutoSkeleton aims to provide:
 - High performance
 - Composable architecture
 
-The goal is not to provide hundreds of pre-built skeletons.
-
-Instead, AutoSkeleton provides a small set of primitives that can be combined to create virtually any loading UI.
-
 ---
 
-# Design Goals
+## Design Goals
 
-AutoSkeleton is built around the following goals.
+### 1. Simplicity
 
-## 1. Simplicity
-
-A skeleton should be easy to render.
+A skeleton should be easy to render with no required configuration:
 
 ```tsx
 <Skeleton />
 ```
 
-No provider should be required.
+No provider required. No stylesheet setup beyond a single import.
 
-No configuration should be necessary.
+### 2. Composability
 
----
-
-## 2. Composability
-
-Small components should compose into larger loading interfaces.
-
-Example:
+Small components compose into larger loading interfaces:
 
 ```
-Skeleton
-      ↓
-AvatarSkeleton
-      ↓
-ProfileSkeleton
+Skeleton → AvatarSkeleton → ProfileSkeleton
 ```
 
-Rather than creating large monolithic components, AutoSkeleton encourages composition.
+### 3. Consistency
+
+Every skeleton shares animations, colors, border radius, and timing through a unified theme system.
+
+### 4. Customization
+
+Every default is overridable. Developers should never feel locked into one design.
+
+### 5. Type Safety
+
+Every public API provides excellent TypeScript support. The library minimizes runtime errors through compile-time validation and IntelliSense-ready JSDoc.
+
+### 6. Performance
+
+Skeletons should render quickly. The library avoids unnecessary re-renders through `React.memo` and `useMemo`, and uses CSS animations exclusively.
 
 ---
 
-## 3. Consistency
-
-Every skeleton should share:
-
-- animations
-- colors
-- border radius
-- timing
-- spacing
-
-through a unified theme system.
-
----
-
-## 4. Customization
-
-Every default should be overridable.
-
-Developers should never feel locked into one design.
-
----
-
-## 5. Type Safety
-
-Every public API should provide excellent TypeScript support.
-
-AutoSkeleton should minimize runtime errors by leveraging compile-time validation.
-
----
-
-## 6. Performance
-
-Skeletons should render quickly.
-
-The library should avoid unnecessary re-renders and minimize DOM complexity.
-
----
-
-# Non-Goals
+## Non-Goals
 
 AutoSkeleton intentionally does not attempt to become:
 
-- a CSS framework
-- a component framework
-- a design system
-- an animation library
+- A CSS framework
+- A general component framework
+- A design system
+- An animation library
 
-Those responsibilities belong to other tools.
-
-AutoSkeleton focuses exclusively on loading placeholders.
+AutoSkeleton focuses exclusively on loading placeholder states.
 
 ---
 
-# Core Principles
+## Core Principles
 
-Every feature added to AutoSkeleton should follow these principles.
+### Primitive First
 
-## Primitive First
+Everything starts with the primitive `Skeleton` component. Higher-level components reuse primitives instead of implementing their own rendering logic.
 
-Everything starts with the primitive `Skeleton` component.
+### Composition Over Duplication
 
-Higher-level components should reuse primitives instead of implementing their own rendering logic.
-
----
-
-## Composition Over Duplication
-
-Instead of creating many specialized implementations, components should compose existing primitives.
-
-Example:
+Instead of specialized implementations, components compose existing primitives:
 
 ```
-CardSkeleton
-
-↓
-
-ImageSkeleton
-
-↓
-
-Skeleton
+CardSkeleton → ImageSkeleton → Skeleton
 ```
 
-Animation logic should never be duplicated.
+Animation logic is never duplicated.
 
----
+### Sensible Defaults
 
-## Sensible Defaults
+AutoSkeleton looks good without configuration. Developers obtain attractive loading placeholders immediately after installation.
 
-AutoSkeleton should look good without configuration.
+### Progressive Customization
 
-Developers should be able to install the library and immediately obtain attractive loading placeholders.
-
----
-
-## Progressive Customization
-
-The API should remain simple for beginners while exposing advanced customization for experienced users.
-
-Example:
-
-Simple:
+Simple for beginners, powerful for experienced users:
 
 ```tsx
+// Simple
 <Skeleton />
-```
 
-Advanced:
-
-```tsx
-<SkeletonGroup
-    animation="pulse"
-    color="#ddd"
-    gap={16}
->
+// Advanced
+<SkeletonGroup animation="pulse" color="#ddd" gap={16} animationDirection="alternate">
+  <ProfileSkeleton />
+</SkeletonGroup>
 ```
 
 ---
 
-# Component Philosophy
+## Component Philosophy
 
-AutoSkeleton separates components into two categories.
+### Primitive Components
 
-## Primitive Components
+The foundation of the library. Remain reusable, predictable, and independent.
 
-Primitive components are the foundation of the library.
+- `Skeleton`
+- `TextSkeleton`
+- `AvatarSkeleton`
+- `ButtonSkeleton`
+- `ImageSkeleton`
+- `SkeletonGroup`
 
-Examples:
+### Composite Components
 
-- Skeleton
-- TextSkeleton
-- AvatarSkeleton
-- ButtonSkeleton
-- ImageSkeleton
-- SkeletonGroup
+Built entirely from primitives. Never duplicate primitive logic.
 
-Primitive components should remain:
-
-- reusable
-- predictable
-- independent
-
----
-
-## Composite Components
-
-Composite components are built entirely from primitives.
-
-Examples:
-
-- CardSkeleton
-- ProfileSkeleton
-- ProductCardSkeleton
-- ArticleSkeleton
-- DashboardSkeleton
-
-Composite components should never duplicate primitive logic.
+- `CardSkeleton`, `ArticleSkeleton`, `ProfileSkeleton`
+- `TableSkeleton`, `ListSkeleton`, `DashboardSkeleton`
+- `FormSkeleton`, `StatisticCardSkeleton`, `MediaObjectSkeleton`
+- `CommentSkeleton`, `ChatMessageSkeleton`, `ProductCardSkeleton`
+- `GallerySkeleton`, `SidebarSkeleton`, `NavbarSkeleton`
+- `PricingCardSkeleton`, `TimelineSkeleton`
 
 ---
 
-# Composition Philosophy
+## Theming Philosophy
 
-AutoSkeleton embraces composition over inheritance.
+The library ships with sensible defaults. Global customization is optional via `SkeletonProvider`. Local customization is available via `SkeletonGroup`. Theme inheritance follows React Context.
 
-Example:
+The theme includes: `animation`, `duration`, `easing`, `animationDirection`, `radius`, `color`, `highlight`.
 
-```
-CardSkeleton
-
-├── ImageSkeleton
-├── TextSkeleton
-└── ButtonSkeleton
-```
-
-Each child remains reusable independently.
-
-This approach reduces maintenance while increasing flexibility.
+The built-in `DARK_THEME` preset provides ready-made dark mode colors.
 
 ---
 
-# Theming Philosophy
+## Developer Experience
 
-The library ships with sensible defaults.
+Developer experience is a primary design objective:
 
-Every skeleton automatically uses the default theme.
-
-Global customization is optional.
-
-Developers may override the theme using `SkeletonProvider`.
-
-Local customization may be achieved using `SkeletonGroup`.
-
-Theme inheritance follows React Context.
-
----
-
-# Developer Experience
-
-Developer experience is a primary design objective.
-
-The library should:
-
-- require minimal boilerplate
-- expose intuitive APIs
-- provide helpful TypeScript autocompletion
-- support tree shaking
-- remain framework-friendly
+- Minimal boilerplate
+- Intuitive APIs
+- Helpful TypeScript autocompletion via JSDoc
+- Tree-shakable
+- Framework-friendly (Vite, Next.js, Remix, CRA)
+- Public `useSkeleton` hook for custom integrations
 
 A developer should be productive within minutes.
 
 ---
 
-# API Design
+## API Design
 
-The public API follows several rules.
+### Consistency
 
-## Consistency
+Components expose similar prop names wherever possible: `width`, `height`, `animation`, `radius`, `className`, `style`.
 
-Components should expose similar prop names whenever possible.
+### Predictability
 
-Examples:
+A prop has the same meaning across the library. `animation="none"` always means no animation, regardless of component.
 
-- width
-- height
-- animation
-- radius
-- className
-- style
+### Extensibility
+
+Future components integrate naturally without breaking API changes.
 
 ---
 
-## Predictability
+## Performance Philosophy
 
-Components should behave consistently.
+Performance is considered during every design decision:
 
-A prop should have the same meaning across the library.
-
----
-
-## Extensibility
-
-Future components should integrate naturally without introducing breaking API changes.
-
----
-
-# Naming Conventions
-
-Component names follow PascalCase.
-
-Examples:
-
-```
-Skeleton
-TextSkeleton
-CardSkeleton
-```
-
-Props follow camelCase.
-
-Examples:
-
-```
-showAvatar
-imageHeight
-animation
-```
-
-Internal utilities remain implementation details and are not part of the public API.
-
----
-
-# Performance Philosophy
-
-Performance is considered during every design decision.
-
-AutoSkeleton prioritizes:
-
-- minimal DOM nodes
-- memoized computations where appropriate
+- Minimal DOM nodes
+- `React.memo` on all components
+- `useMemo` for theme objects in `SkeletonProvider` and `SkeletonGroup`
 - CSS animations over JavaScript animations
-- lightweight rendering
-- efficient theme propagation
-
-The library should remain suitable for large applications.
-
----
-
-# Accessibility
-
-Skeletons are decorative loading placeholders.
-
-They should not interfere with assistive technologies.
-
-Components should:
-
-- use `aria-hidden="true"` where appropriate
-- avoid misleading semantics
-- allow developers to provide accessible loading states
-
-Accessibility is considered a core feature rather than an afterthought.
+- CSS custom properties for runtime theme values (no re-render on theme change)
+- `will-change: opacity, transform` on the base skeleton class
+- Tree-shakable ESM build
 
 ---
 
-# Future Vision
+## Accessibility
 
-The long-term goal is to build a complete loading UI toolkit.
+Skeletons are decorative loading placeholders and must not interfere with assistive technologies.
 
-Future additions may include:
+- Default: `aria-hidden="true"`
+- Meaningful loading regions: `aria-label` + `role="status"`
+- `SkeletonGroup` supports `aria-label` and `aria-busy`
+- Individual `Skeleton` supports `aria-label`
+- `prefers-reduced-motion`: all animations disabled via a single CSS media query
+- No interactive elements or keyboard focus in any skeleton component
 
-Primitive Components
-
-- DividerSkeleton
-- BadgeSkeleton
-- ChipSkeleton
-
-Composite Components
-
-- ProfileSkeleton
-- ProductCardSkeleton
-- ArticleSkeleton
-- DashboardSkeleton
-- TableSkeleton
-- FormSkeleton
-- CommentSkeleton
-
-Additional Features
-
-- Layout presets
-- Animation presets
-- Responsive skeletons
-- Storybook documentation
-- Theme presets
-- Custom animations
-- Framework adapters
-
-The architecture should continue to evolve while preserving a stable and intuitive API.
+Accessibility is a core feature, not an afterthought.

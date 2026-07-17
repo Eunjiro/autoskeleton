@@ -1,567 +1,385 @@
 # AutoSkeleton Specification
 
-> **Version:** Draft v1.0
+> **Version:** 0.1.5
 >
 > This document defines the public API, component behavior, type definitions, default values, accessibility requirements, and implementation contracts of AutoSkeleton.
 
 ---
 
-# Table of Contents
+## Table of Contents
 
-1. Overview
-2. Public API
-3. Theme Specification
-4. Components
-5. Shared Props
-6. Animations
-7. Variants
-8. Layout
-9. Accessibility
-10. Performance
-11. TypeScript
-12. Package Exports
-13. Future Components
-14. Semantic Versioning
+1. [Overview](#overview)
+2. [Public API](#public-api)
+3. [Theme Specification](#theme-specification)
+4. [Component Specifications](#component-specifications)
+5. [Animations](#animations)
+6. [Variants](#variants)
+7. [Accessibility](#accessibility)
+8. [Performance](#performance)
+9. [TypeScript](#typescript)
+10. [Package Exports](#package-exports)
+11. [Semantic Versioning](#semantic-versioning)
+12. [Compatibility](#compatibility)
 
 ---
 
-# Overview
+## Overview
 
-AutoSkeleton is composed of small reusable components.
-
-The public API consists of:
-
-```
-Skeleton
-
-TextSkeleton
-
-AvatarSkeleton
-
-ButtonSkeleton
-
-ImageSkeleton
-
-CardSkeleton
-
-SkeletonGroup
-
-SkeletonProvider
-```
-
-Every public component is fully typed.
+AutoSkeleton is composed of small reusable components built from a single primitive. The public API is intentionally minimal and stable.
 
 ---
 
-# Public API
+## Public API
 
 ```
-@autoskeleton/react
+@gyojiro/autoskeleton-react
 
-│
+Primitives:
+  Skeleton
+  SkeletonGroup
+  SkeletonProvider
 
-├── Skeleton
+Atomic:
+  TextSkeleton
+  AvatarSkeleton
+  ButtonSkeleton
+  ImageSkeleton
 
-├── TextSkeleton
+Composites:
+  CardSkeleton
+  ArticleSkeleton
+  ProfileSkeleton
+  TableSkeleton
+  ListSkeleton
+  DashboardSkeleton
+  FormSkeleton
+  StatisticCardSkeleton
+  MediaObjectSkeleton
+  CommentSkeleton
+  ChatMessageSkeleton
+  ProductCardSkeleton
+  GallerySkeleton
+  SidebarSkeleton
+  NavbarSkeleton
+  PricingCardSkeleton
+  TimelineSkeleton
 
-├── AvatarSkeleton
+Hook:
+  useSkeleton
 
-├── ButtonSkeleton
+Constants:
+  DARK_THEME
 
-├── ImageSkeleton
-
-├── CardSkeleton
-
-├── SkeletonGroup
-
-└── SkeletonProvider
+Types:
+  SkeletonTheme
+  SkeletonAnimation
+  SkeletonAnimationDirection
+  SkeletonRadius
+  SkeletonVariant
 ```
 
-Internal utilities are not exported.
+Internal utilities (`getRadiusValue`, `getSkeletonDimensions`, etc.) are not exported.
 
 ---
 
-# Theme Specification
+## Theme Specification
 
-Theme values are inherited through React Context.
+Theme values are inherited through React Context. The provider is optional.
 
-Default theme:
+### Default Theme
 
 ```ts
-{
+const DEFAULT_THEME: SkeletonTheme = {
   animation: "wave",
-  duration: 1.5,
+  duration: 1.2,
+  easing: "ease-in-out",
+  animationDirection: "normal",
   radius: "md",
   color: "#E5E7EB",
-  highlight: "#F3F4F6"
-}
+  highlight: "#F9FAFB",
+};
 ```
 
-The provider is optional.
+### Dark Theme Preset
 
----
+```ts
+const DARK_THEME: Partial<SkeletonTheme> = {
+  color: "#374151",
+  highlight: "#4B5563",
+};
+```
 
-# Theme Properties
+### Theme Properties
 
 | Property | Type | Default |
-|----------|------|---------|
-| animation | SkeletonAnimation | wave |
-| duration | number | 1.5 |
-| radius | SkeletonRadius | md |
-| color | string | #E5E7EB |
-| highlight | string | #F3F4F6 |
+|---|---|---|
+| `animation` | `"wave" \| "pulse" \| "fade" \| "none"` | `"wave"` |
+| `duration` | `number` (seconds) | `1.2` |
+| `easing` | `string` (CSS timing function) | `"ease-in-out"` |
+| `animationDirection` | `"normal" \| "reverse" \| "alternate" \| "alternate-reverse"` | `"normal"` |
+| `radius` | `"none" \| "sm" \| "md" \| "lg" \| "full" \| string` | `"md"` |
+| `color` | `string` (CSS color) | `"#E5E7EB"` |
+| `highlight` | `string` (CSS color) | `"#F9FAFB"` |
+
+### CSS Custom Properties
+
+All theme values are written as inline CSS variables on each `Skeleton` element:
+
+| Variable | Mapped From |
+|---|---|
+| `--skeleton-color` | `color` |
+| `--skeleton-highlight` | `highlight` |
+| `--skeleton-duration` | `duration` |
+| `--skeleton-easing` | `easing` |
+| `--skeleton-direction` | `animationDirection` |
 
 ---
 
-# Skeleton
+## Component Specifications
+
+### Skeleton
 
 The primitive building block.
 
-## Props
+| Prop | Type | Default |
+|---|---|---|
+| `width` | `number \| string` | `"100%"` |
+| `height` | `number \| string` | `16` |
+| `size` | `number \| string` | — |
+| `variant` | `"default" \| "rounded" \| "circle"` | `"default"` |
+| `radius` | `SkeletonRadius \| string` | theme |
+| `animation` | `SkeletonAnimation` | theme |
+| `className` | `string` | — |
+| `style` | `CSSProperties` | — |
+| `aria-label` | `string` | — |
+| `data-testid` | `string` | — |
+
+**Behavior:**
+- Decorative by default: `aria-hidden="true"`
+- When `aria-label` is provided: `role="status"` is added and `aria-hidden` removed
+- CSS class pattern: `skeleton skeleton-{animation}`
+- Circle variant adds `flexShrink: 0`
+
+---
+
+### SkeletonProvider
+
+| Prop | Type |
+|---|---|
+| `children` | `ReactNode` |
+| `...Partial<SkeletonTheme>` | All theme props |
+
+**Behavior:** Merges `DEFAULT_THEME` with provided props via `useMemo`.
+
+---
+
+### SkeletonGroup
 
 | Prop | Type | Default |
-|------|------|---------|
-| width | number \| string | 100% |
-| height | number \| string | 16 |
-| size | number \| string | - |
-| radius | SkeletonRadius | theme.radius |
-| animation | SkeletonAnimation | theme.animation |
-| variant | SkeletonVariant | rectangle |
-| className | string | - |
-| style | CSSProperties | - |
+|---|---|---|
+| `direction` | `"row" \| "column"` | `"column"` |
+| `gap` | `number \| string` | `16` |
+| `padding` | `number \| string` | `0` |
+| `align` | `CSSProperties["alignItems"]` | `"stretch"` |
+| `justify` | `CSSProperties["justifyContent"]` | `"flex-start"` |
+| `aria-label` | `string` | — |
+| `aria-busy` | `boolean` | `true` |
+| `...Partial<SkeletonTheme>` | All theme props | — |
 
-### Behavior
-
-- Renders one placeholder.
-- Uses theme values automatically.
-- Supports inline overrides.
-- Decorative only.
+**Behavior:**
+- When `aria-label` provided: `role="status"` + `aria-busy`
+- Merges theme from parent context with group-level overrides via `useMemo`
 
 ---
 
-# TextSkeleton
+### TextSkeleton
 
-Represents multiple text lines.
-
-## Props
+Extends `Omit<SkeletonProps, "width" | "height" | "size" | "variant">`.
 
 | Prop | Type | Default |
-|------|------|---------|
-| lines | number | 3 |
-| gap | number \| string | 8 |
-| lineHeight | number | 16 |
-| lastLineWidth | number \| string | 70% |
-| randomizeWidths | boolean | false |
-| minLineWidth | number | 30 |
-| maxLineWidth | number | 100 |
-| className | string | - |
-
-### Behavior
-
-- Generates multiple Skeleton components.
-- Supports random line widths.
-- Last line may use a custom width.
+|---|---|---|
+| `lines` | `number` | `3` |
+| `lineHeight` | `number \| string` | `16` |
+| `gap` | `number \| string` | `8` |
+| `lastLineWidth` | `number \| string` | `"70%"` |
+| `randomizeWidths` | `boolean` | `false` |
+| `minLineWidth` | `number` | `55` |
+| `maxLineWidth` | `number` | `90` |
 
 ---
 
-# AvatarSkeleton
-
-Circular profile placeholder.
-
-## Props
+### AvatarSkeleton
 
 | Prop | Type | Default |
-|------|------|---------|
-| size | number | 48 |
-| className | string | - |
-| style | CSSProperties | - |
+|---|---|---|
+| `size` | `number \| string` | `48` |
 
-### Behavior
-
-Always renders:
-
-```
-variant="circle"
-```
+Always renders `variant="circle"`.
 
 ---
 
-# ButtonSkeleton
-
-Button placeholder.
-
-## Props
+### ButtonSkeleton
 
 | Prop | Type | Default |
-|------|------|---------|
-| width | number \| string | 120 |
-| height | number | 40 |
-| className | string | - |
+|---|---|---|
+| `width` | `number \| string` | `120` |
+| `height` | `number \| string` | `40` |
 
-### Behavior
-
-Uses rounded corners by default.
+Uses `variant="rounded"` by default.
 
 ---
 
-# ImageSkeleton
-
-Image placeholder.
-
-## Props
+### ImageSkeleton
 
 | Prop | Type | Default |
-|------|------|---------|
-| width | number \| string | 100% |
-| height | number | 180 |
-| className | string | - |
+|---|---|---|
+| `width` | `number \| string` | `"100%"` |
+| `height` | `number \| string` | `180` |
+| `aspectRatio` | `string` | — |
+
+When `aspectRatio` is set, `height` becomes `undefined` and CSS `aspect-ratio` takes over.
 
 ---
 
-# CardSkeleton
-
-Composite loading component.
-
-## Props
+### CardSkeleton
 
 | Prop | Type | Default |
-|------|------|---------|
-| direction | row \| column | column |
-| showImage | boolean | true |
-| showAvatar | boolean | false |
-| showButton | boolean | true |
-| imageWidth | number \| string | 100% |
-| imageHeight | number | 180 |
-| avatarSize | number | 48 |
-| lines | number | 3 |
+|---|---|---|
+| `direction` | `"row" \| "column"` | `"column"` |
+| `showImage` | `boolean` | `true` |
+| `showAvatar` | `boolean` | `false` |
+| `showButton` | `boolean` | `true` |
+| `imageWidth` | `number \| string` | `"100%"` |
+| `imageHeight` | `number` | `180` |
+| `avatarSize` | `number` | `48` |
+| `lines` | `number` | `3` |
+| `gap` | `number \| string` | `12` |
+| `padding` | `number \| string` | `16` |
 
-Additionally inherits:
-
-- gap
-- padding
-- direction
-- align
-- justify
-- animation
-- duration
-- radius
-- color
-- highlight
-
-through SkeletonGroup.
-
-### Behavior
-
-Internally composed from:
-
-```
-ImageSkeleton
-
-↓
-
-TextSkeleton
-
-↓
-
-ButtonSkeleton
-```
+Composed from: `ImageSkeleton`, `AvatarSkeleton`, `TextSkeleton`, `ButtonSkeleton`, `SkeletonGroup`.
 
 ---
 
-# SkeletonGroup
+### Composite Components (summary)
 
-Theme scope and layout container.
+All composite components accept theme override props and are wrapped with `React.memo`.
 
-## Props
-
-| Prop | Type | Default |
-|------|------|---------|
-| gap | number \| string | 16 |
-| padding | number \| string | 0 |
-| direction | row \| column | column |
-| align | CSS alignItems | stretch |
-| justify | CSS justifyContent | flex-start |
-| className | string | - |
-| style | CSSProperties | - |
-
-Also accepts:
-
-```
-Partial<SkeletonTheme>
-```
-
-for local theme overrides.
-
----
-
-# SkeletonProvider
-
-Provides a global theme.
-
-## Props
-
-Accepts:
-
-```
-Partial<SkeletonTheme>
-```
-
-plus:
-
-```
-children
-```
-
-### Behavior
-
-Merges:
-
-```
-DEFAULT_THEME
-
-+
-
-User Theme
-```
-
-before providing context.
+| Component | Key Props |
+|---|---|
+| `ArticleSkeleton` | `showImage`, `lines`, `showAuthor` |
+| `ProfileSkeleton` | `showCover`, `showBio`, `showStats`, `showButton` |
+| `TableSkeleton` | `rows`, `columns`, `showHeader` |
+| `ListSkeleton` | `items`, `showIcon`, `iconSize` |
+| `DashboardSkeleton` | `cards`, `showChart`, `showTable` |
+| `FormSkeleton` | `fields`, `showButton` |
+| `StatisticCardSkeleton` | `showIcon`, `showTrend` |
+| `MediaObjectSkeleton` | `imageWidth`, `imageHeight`, `lines` |
+| `CommentSkeleton` | `lines`, `avatarSize` |
+| `ChatMessageSkeleton` | `messages` |
+| `ProductCardSkeleton` | `showBadge`, `showRating`, `showButton` |
+| `GallerySkeleton` | `items`, `columns` |
+| `SidebarSkeleton` | `navItems`, `showLogo`, `showProfile` |
+| `NavbarSkeleton` | `navItems`, `showLogo`, `showButton` |
+| `PricingCardSkeleton` | `features`, `showBadge` |
+| `TimelineSkeleton` | `items` |
 
 ---
 
-# Shared Props
+## Animations
 
-Several components share common props.
+| Value | Behavior |
+|---|---|
+| `"wave"` | Left-to-right shimmer sweep via `::after` pseudo-element |
+| `"pulse"` | Opacity 1 → 0.45 → 1 cycle |
+| `"fade"` | Opacity 0.5 → 1 → 0.5 cycle |
+| `"none"` | `animation: none` — static placeholder |
 
-| Prop | Description |
-|------|-------------|
-| className | CSS class |
-| style | Inline styles |
-| animation | Override animation |
-| radius | Override border radius |
-| width | Width |
-| height | Height |
-
-Shared naming keeps the API predictable.
+All animations use CSS custom properties for duration, easing, and direction. All are disabled when `prefers-reduced-motion: reduce` is active.
 
 ---
 
-# Animations
+## Variants
 
-Supported animations:
-
-```
-wave
-
-pulse
-
-fade
-
-none
-```
-
-Animation implementation is CSS-based.
-
-JavaScript animation should not be introduced.
+| Value | Border Radius |
+|---|---|
+| `"default"` | From theme radius |
+| `"rounded"` | `9999px` |
+| `"circle"` | `50%` + equal width/height |
 
 ---
 
-# Variants
+## Accessibility
 
-Supported variants:
-
-```
-rectangle
-
-circle
-
-rounded
-
-pill
-```
-
-Future variants should remain backward compatible.
+**Requirements:**
+- Decorative skeletons: `aria-hidden="true"`
+- Loading regions: `role="status"` + `aria-label`
+- No interactive behavior; no keyboard focus
+- All animations disabled under `prefers-reduced-motion: reduce`
 
 ---
 
-# Layout
+## Performance
 
-SkeletonGroup provides layout.
-
-Supported properties:
-
-```
-gap
-
-padding
-
-direction
-
-align
-
-justify
-```
-
-No dedicated layout component exists.
-
----
-
-# Accessibility
-
-Skeletons are decorative.
-
-Requirements:
-
-- aria-hidden="true"
-- No interactive behavior
-- No keyboard focus
-
-Loading announcements remain the application's responsibility.
-
----
-
-# Performance
-
-Requirements:
-
-- CSS animations
-- Minimal DOM
-- No unnecessary providers
+**Requirements:**
+- CSS-only animations
+- `React.memo` on all components
+- `useMemo` for theme merge in provider and group
+- `will-change: opacity, transform` on base skeleton
+- Minimal DOM depth per component
 - Tree-shakable exports
-- Small bundle size
-
-Composite components should reuse primitives.
 
 ---
 
-# TypeScript
+## TypeScript
 
-Public APIs are fully typed.
+All public APIs are fully typed. The library exports:
 
-The library exports:
+- `SkeletonTheme`
+- `SkeletonAnimation`
+- `SkeletonAnimationDirection`
+- `SkeletonRadius`
+- `SkeletonVariant`
+- All component prop types (e.g. `SkeletonProps`, `SkeletonProviderProps`, etc.)
 
-- component props
-- theme types
-- animation types
-- radius types
-- variant types
-
-Type inference should work without manual generics.
-
----
-
-# Package Exports
-
-Public exports include:
-
-```
-Skeleton
-
-TextSkeleton
-
-AvatarSkeleton
-
-ButtonSkeleton
-
-ImageSkeleton
-
-CardSkeleton
-
-SkeletonGroup
-
-SkeletonProvider
-```
-
-Internal files remain private.
+Type inference works without manual generics.
 
 ---
 
-# Future Components
+## Package Exports
 
-Primitive:
-
-```
-DividerSkeleton
-
-ChipSkeleton
-
-BadgeSkeleton
-```
-
-Composite:
-
-```
-ProfileSkeleton
-
-ArticleSkeleton
-
-DashboardSkeleton
-
-TableSkeleton
-
-FormSkeleton
-
-CommentSkeleton
+```json
+{
+  ".": {
+    "types":   "./dist/index.d.ts",
+    "import":  "./dist/index.js",
+    "require": "./dist/index.cjs"
+  },
+  "./style.css": "./dist/index.css"
+}
 ```
 
-Future additions should follow the same design principles and architectural guidelines.
+`sideEffects: ["**/*.css"]` ensures CSS is never tree-shaken.
 
 ---
 
-# Semantic Versioning
+## Semantic Versioning
 
-AutoSkeleton follows Semantic Versioning.
+### Major (x.0.0)
+Breaking API changes — prop renames, component removals, behavior changes.
 
-## Major
+### Minor (0.x.0)
+New components, new props, backward-compatible improvements.
 
-Breaking API changes.
-
-Example:
-
-```
-1.x.x → 2.0.0
-```
+### Patch (0.0.x)
+Bug fixes, performance improvements, documentation updates.
 
 ---
 
-## Minor
+## Compatibility
 
-New components.
-
-New props.
-
-Backward-compatible improvements.
-
-Example:
-
-```
-1.2.0 → 1.3.0
-```
-
----
-
-## Patch
-
-Bug fixes.
-
-Performance improvements.
-
-Documentation updates.
-
-Example:
-
-```
-1.2.3 → 1.2.4
-```
-
----
-
-# Compatibility
-
-Supported environments:
-
-- React 18+
-- React 19+
-- TypeScript 5+
-- Modern evergreen browsers
-
-The library is designed to remain framework-friendly and tree-shakable while maintaining a stable and predictable public API.
+| Requirement | Version |
+|---|---|
+| React | 18+ or 19+ |
+| TypeScript | 5+ (6.x supported) |
+| Node.js | 18+ (build only) |
+| Browsers | Modern evergreen (Chrome, Firefox, Safari, Edge) |

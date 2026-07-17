@@ -1,36 +1,35 @@
-# AutoSkeleton Architecture
+﻿# AutoSkeleton Architecture
 
-> **Version:** Draft v1.0
+> **Version:** 0.1.5
 >
 > This document describes the internal architecture of AutoSkeleton, how components are organized, how data flows through the library, and the architectural decisions that guide development.
 
 ---
 
-# Table of Contents
+## Table of Contents
 
-1. Overview
-2. Project Structure
-3. Architectural Layers
-4. Component Hierarchy
-5. Theme System
-6. Rendering Pipeline
-7. Primitive Components
-8. Composite Components
-9. Context Architecture
-10. Hooks
-11. Utilities
-12. Data Flow
-13. Design Decisions
-14. Performance
-15. Future Architecture
+1. [Overview](#overview)
+2. [Project Structure](#project-structure)
+3. [Architectural Layers](#architectural-layers)
+4. [Component Hierarchy](#component-hierarchy)
+5. [Theme System](#theme-system)
+6. [Rendering Pipeline](#rendering-pipeline)
+7. [Primitive Components](#primitive-components)
+8. [Composite Components](#composite-components)
+9. [Context Architecture](#context-architecture)
+10. [Hooks](#hooks)
+11. [Utilities](#utilities)
+12. [Data Flow](#data-flow)
+13. [Performance](#performance)
+14. [Testing](#testing)
+15. [Storybook](#storybook)
+16. [Design Decisions](#design-decisions)
 
 ---
 
-# Overview
+## Overview
 
-AutoSkeleton follows a layered architecture built around reusable primitives.
-
-Rather than implementing each skeleton independently, every component is composed from a small set of foundational building blocks.
+AutoSkeleton follows a layered architecture built around reusable primitives. Rather than implementing each skeleton independently, every component is composed from a small set of foundational building blocks.
 
 The architecture emphasizes:
 
@@ -40,536 +39,333 @@ The architecture emphasizes:
 - Predictable rendering
 - Type safety
 - Separation of concerns
+- Performance via memoization
 
 ---
 
-# Project Structure
+## Project Structure
 
 ```
 src/
 │
 ├── components/
-│   │
-│   ├── Skeleton/
+│   ├── Skeleton/              # Core primitive
+│   ├── SkeletonGroup/         # Layout + local theme scope
 │   ├── TextSkeleton/
 │   ├── AvatarSkeleton/
 │   ├── ButtonSkeleton/
 │   ├── ImageSkeleton/
 │   ├── CardSkeleton/
-│   └── SkeletonGroup/
+│   ├── ArticleSkeleton/
+│   ├── ProfileSkeleton/
+│   ├── TableSkeleton/
+│   ├── ListSkeleton/
+│   ├── DashboardSkeleton/
+│   ├── FormSkeleton/
+│   ├── StatisticCardSkeleton/
+│   ├── MediaObjectSkeleton/
+│   ├── CommentSkeleton/
+│   ├── ChatMessageSkeleton/
+│   ├── ProductCardSkeleton/
+│   ├── GallerySkeleton/
+│   ├── SidebarSkeleton/
+│   ├── NavbarSkeleton/
+│   ├── PricingCardSkeleton/
+│   └── TimelineSkeleton/
 │
 ├── context/
-│   ├── SkeletonContext.tsx
-│   └── SkeletonProvider.tsx
+│   ├── SkeletonContext.tsx     # createContext with DEFAULT_THEME
+│   └── SkeletonProvider.tsx   # Memoized provider component
 │
 ├── hooks/
-│   └── useSkeleton.ts
+│   └── useSkeleton.ts         # useContext(SkeletonContext)
 │
 ├── constants/
-│   └── defaultTheme.ts
+│   └── defaultTheme.ts        # DEFAULT_THEME + DARK_THEME
 │
 ├── types/
-│   └── theme.types.ts
+│   └── theme.types.ts         # All exported TypeScript types
 │
-└── index.ts
+└── index.ts                   # Public barrel export
 ```
 
-Each public component lives inside its own directory.
-
-Every component owns its:
-
-- implementation
-- types
-- utilities
-- styles
-- exports
-
-This structure keeps the library modular and scalable.
+Each public component lives inside its own directory and owns its implementation, types, utilities, and barrel export.
 
 ---
 
-# Architectural Layers
-
-The library can be viewed as four layers.
+## Architectural Layers
 
 ```
 Application
-      │
-      ▼
-Composite Components
-      │
-      ▼
-Primitive Components
-      │
-      ▼
-Theme System
+      |
+      v
+Composite Components        (CardSkeleton, ProfileSkeleton, ...)
+      |
+      v
+Atomic Components           (TextSkeleton, AvatarSkeleton, ...)
+      |
+      v
+Primitive: Skeleton
+      |
+      v
+Theme System                (SkeletonContext / SkeletonProvider)
 ```
 
-Each layer depends only on the layer below it.
+Each layer depends only on the layer below it. No circular dependencies exist.
 
 ---
 
-# Component Hierarchy
+## Component Hierarchy
 
 ```
-Skeleton
-│
-├── AvatarSkeleton
-├── ButtonSkeleton
-├── ImageSkeleton
-├── TextSkeleton
-│
-└── CardSkeleton
+Skeleton (primitive)
+|
+|-- AvatarSkeleton
+|-- ButtonSkeleton
+|-- ImageSkeleton
+|-- TextSkeleton
+|
++-- Composites
+    |-- CardSkeleton
+    |-- ArticleSkeleton
+    |-- ProfileSkeleton
+    |-- TableSkeleton
+    |-- ListSkeleton
+    |-- DashboardSkeleton
+    |-- FormSkeleton
+    |-- StatisticCardSkeleton
+    |-- MediaObjectSkeleton
+    |-- CommentSkeleton
+    |-- ChatMessageSkeleton
+    |-- ProductCardSkeleton
+    |-- GallerySkeleton
+    |-- SidebarSkeleton
+    |-- NavbarSkeleton
+    |-- PricingCardSkeleton
+    +-- TimelineSkeleton
 ```
 
-Notice that every component ultimately renders one or more primitive `Skeleton` components.
-
-No animation or styling logic is duplicated.
+Every component ultimately renders one or more primitive `Skeleton` instances. No animation or styling logic is duplicated.
 
 ---
 
-# Primitive Components
+## Theme System
 
-Primitive components are reusable building blocks.
-
-Current primitives:
+Theme values propagate via React Context.
 
 ```
-Skeleton
-
-TextSkeleton
-
-AvatarSkeleton
-
-ButtonSkeleton
-
-ImageSkeleton
-
-SkeletonGroup
+DEFAULT_THEME (constants/defaultTheme.ts)
+        |
+        v
+SkeletonContext (createContext with DEFAULT_THEME as default value)
+        |
+        v
+SkeletonProvider (optional — merges user props via useMemo)
+        |
+        v
+SkeletonGroup (optional — merges group-level overrides via useMemo)
+        |
+        v
+useSkeleton() hook
+        |
+        v
+Skeleton (reads theme, writes CSS custom properties inline)
 ```
 
-Responsibilities:
+Because `createContext` is called with `DEFAULT_THEME`, the provider is entirely optional.
 
-- render loading placeholders
-- expose customization
-- inherit theme
-- remain reusable
+### Theme Shape
 
-Primitive components should never depend on composite components.
+```ts
+interface SkeletonTheme {
+  animation: "wave" | "pulse" | "fade" | "none";
+  duration: number;
+  easing: string;
+  animationDirection: "normal" | "reverse" | "alternate" | "alternate-reverse";
+  radius: "none" | "sm" | "md" | "lg" | "full" | (string & {});
+  color: string;
+  highlight: string;
+}
+```
+
+### CSS Custom Properties
+
+The `Skeleton` component writes theme values as CSS custom properties on the element inline style:
+
+| CSS Variable | Source |
+|---|---|
+| `--skeleton-color` | `theme.color` |
+| `--skeleton-highlight` | `theme.highlight` |
+| `--skeleton-duration` | `theme.duration` |
+| `--skeleton-easing` | `theme.easing` |
+| `--skeleton-direction` | `theme.animationDirection` |
+
+CSS animations consume these variables, so theme changes require no JavaScript re-animation logic.
 
 ---
 
-# Composite Components
-
-Composite components combine primitives into real loading interfaces.
-
-Current composites:
+## Rendering Pipeline
 
 ```
-CardSkeleton
-```
-
-Future composites:
-
-```
-ProfileSkeleton
-
-ProductCardSkeleton
-
-ArticleSkeleton
-
-DashboardSkeleton
-
-CommentSkeleton
-
-TableSkeleton
-```
-
-Composite components should never implement animation logic.
-
-Instead they compose primitives.
-
----
-
-# Theme System
-
-The theme system is built around React Context.
-
-```
-DEFAULT_THEME
-        │
-        ▼
-SkeletonContext
-        │
-        ▼
-useSkeleton()
-        │
-        ▼
-Skeleton
-```
-
-Every component automatically inherits the active theme.
-
----
-
-# Default Theme
-
-The library ships with a default theme.
-
-This means developers can immediately use:
-
-```tsx
-<Skeleton />
-```
-
-without wrapping the application inside a provider.
-
----
-
-# SkeletonProvider
-
-`SkeletonProvider` allows global theme customization.
-
-Example:
-
-```tsx
-<SkeletonProvider animation="pulse">
-
-    <App />
-
-</SkeletonProvider>
-```
-
-The provider merges user overrides with the default theme.
-
-```
-DEFAULT_THEME
-
-        +
-
-User Theme
-
-        ▼
-
-Final Theme
-```
-
----
-
-# SkeletonGroup
-
-`SkeletonGroup` serves two purposes.
-
-## Theme Override
-
-A group may locally override animation, colors, duration, or radius.
-
-Example:
-
-```tsx
-<SkeletonGroup animation="pulse">
-```
-
-Only descendants inherit the override.
-
----
-
-## Layout
-
-SkeletonGroup is also responsible for arranging skeleton components.
-
-Supported layout props include:
-
-- gap
-- padding
-- direction
-- align
-- justify
-
-This eliminates the need for a separate layout container.
-
----
-
-# Rendering Pipeline
-
-The rendering flow is intentionally simple.
-
-```
-<CardSkeleton>
-
-        │
-
-        ▼
-
-ImageSkeleton
-
-TextSkeleton
-
-ButtonSkeleton
-
-        │
-
-        ▼
-
-Skeleton
-
-        │
-
-        ▼
-
+<ProfileSkeleton>
+        |
+        v
+AvatarSkeleton + TextSkeleton + ButtonSkeleton (via SkeletonGroup)
+        |
+        v
+<Skeleton> (reads CSS vars from context)
+        |
+        v
+<div class="skeleton skeleton-wave" style="--skeleton-color:...; ...">
+        |
+        v
 DOM
 ```
 
-Every rendered placeholder eventually becomes the primitive `Skeleton`.
+---
+
+## Primitive Components
+
+| Component | Responsibility |
+|---|---|
+| `Skeleton` | Single placeholder block. Reads theme, applies CSS vars, handles shape variants and aria. Wrapped with `React.memo`. |
+| `SkeletonGroup` | Flex container. Merges group-level theme overrides. Provides `aria-label`/`aria-busy`. Wrapped with `React.memo`. |
 
 ---
 
-# Context Architecture
+## Composite Components
+
+Composite components combine primitives into complete loading UI patterns. They accept configuration props and delegate all rendering to primitives via `SkeletonGroup`. They never implement animation or color logic directly.
+
+---
+
+## Context Architecture
 
 ```
-createContext(DEFAULT_THEME)
-
-        │
-
-        ▼
-
+createContext(DEFAULT_THEME)   <- no provider needed
+        |
+        v
 SkeletonContext
-
-        │
-
-        ▼
-
-useSkeleton()
-
-        │
-
-        ▼
-
-Skeleton Components
+        |
+        v
+useSkeleton()                  <- publicly exported hook
+        |
+        v
+Every Skeleton component
 ```
 
-Because the context contains a default value, the provider remains optional.
+`SkeletonProvider` uses `useMemo` to avoid creating a new context value object on every render unless a theme prop actually changes. `SkeletonGroup` does the same.
 
 ---
 
-# Hooks
+## Hooks
 
-Current hooks:
+### `useSkeleton()`
 
+```ts
+function useSkeleton(): SkeletonTheme
 ```
-useSkeleton()
-```
 
-Responsibilities:
-
-- access the active theme
-- hide Context implementation
-- simplify internal components
-
-Hooks should remain lightweight.
+Returns the current theme from context. Publicly exported for use in custom skeleton components.
 
 ---
 
-# Utilities
+## Utilities
 
-Utilities contain reusable logic shared across components.
+### `getRadiusValue(radius)`
+Maps `SkeletonRadius` presets to CSS pixel values. Unknown strings pass through unchanged, enabling arbitrary CSS like `"6px 12px"`.
 
-Examples:
+### `getSkeletonDimensions(props)`
+Resolves `width`, `height`, `size`, and `variant` into concrete CSS dimension values.
 
-```
-getRadiusValue()
-
-getRandomWidth()
-```
-
-Utilities should:
-
-- be pure
-- avoid side effects
-- remain framework-independent
+### `getRandomWidth(min, max)`
+Returns a random integer in `[min, max]` for `TextSkeleton` random line widths.
 
 ---
 
-# Data Flow
-
-Theme propagation follows this flow.
+## Data Flow
 
 ```
-SkeletonProvider
-
-        │
-
-        ▼
-
-SkeletonGroup
-
-        │
-
-        ▼
-
-Skeleton
-
-        │
-
-        ▼
-
-Rendered Placeholder
+SkeletonProvider (global defaults)
+        |
+        v
+SkeletonGroup (optional local override)
+        |
+        v
+Skeleton (CSS custom properties applied inline)
+        |
+        v
+Rendered placeholder in DOM
 ```
 
-If no provider exists:
-
-```
-DEFAULT_THEME
-
-        ▼
-
-Skeleton
-```
-
-This keeps configuration optional.
+If no provider exists, `Skeleton` reads directly from `createContext(DEFAULT_THEME)`.
 
 ---
 
-# Dependency Graph
+## Performance
 
-```
-CardSkeleton
-
-│
-
-├── ImageSkeleton
-
-├── TextSkeleton
-
-├── ButtonSkeleton
-
-└── SkeletonGroup
-
-        │
-
-        ▼
-
-Skeleton
-
-        │
-
-        ▼
-
-Theme
-```
-
-Dependencies always point downward.
-
-Circular dependencies should never exist.
+| Technique | Applied To |
+|---|---|
+| `React.memo` | All components |
+| `useMemo` for theme object | `SkeletonProvider`, `SkeletonGroup` |
+| CSS animations | All animations via `@keyframes` + CSS custom properties |
+| `will-change: opacity, transform` | `.skeleton` base class |
+| `prefers-reduced-motion` media query | Disables all animations in CSS |
+| Tree-shaking via ESM | All exports named, side-effect-free except CSS |
 
 ---
 
-# Design Decisions
+## Testing
 
-## Primitive First
+Tests live in `src/test/` and run with Vitest + jsdom + React Testing Library.
 
-Every feature should reuse primitives.
+| File | Tests |
+|---|---|
+| `Skeleton.test.tsx` | 14 — rendering, variants, animations, aria, theme |
+| `SkeletonGroup.test.tsx` | 5 — layout, theme propagation, aria |
+| `components.test.tsx` | 15 — TextSkeleton, AvatarSkeleton, ButtonSkeleton, ImageSkeleton, CardSkeleton |
+| `newComponents.test.tsx` | 32 — all 16 composite components |
 
-Avoid duplicating rendering logic.
+**Total: 66 tests passing.**
+
+```bash
+npm test                # single run
+npm run test:watch      # watch mode
+npm run test:coverage   # coverage report
+```
 
 ---
 
-## Composition Over Inheritance
+## Storybook
 
-Components should compose existing components rather than extending them.
+Stories live in `stories/` at the project root.
+
+Addons: `@storybook/addon-docs`, `@storybook/addon-a11y`, `@storybook/addon-vitest`, `@chromatic-com/storybook`.
+
+```bash
+npm run storybook           # dev server at http://localhost:6006
+npm run build-storybook     # static build
+npm run test:storybook      # headless story tests via Vitest
+```
 
 ---
 
-## Optional Provider
+## Design Decisions
 
-Developers should never be forced to use `SkeletonProvider`.
+### Primitive First
+Every feature reuses the `Skeleton` primitive. No composite implements its own animation.
 
-The library works immediately using `DEFAULT_THEME`.
+### Composition Over Inheritance
+Components compose existing components rather than class inheritance.
 
----
+### Optional Provider
+`SkeletonProvider` is never required. `createContext(DEFAULT_THEME)` ensures sane global defaults.
 
-## SkeletonGroup as Layout
+### `SkeletonGroup` as Both Layout and Theme Scope
+Rather than having separate layout and theme-override components, `SkeletonGroup` serves both purposes, reducing API surface area.
 
-Originally, a dedicated layout component was considered.
+### `direction` vs `animationDirection`
+`SkeletonGroup.direction` controls flex layout direction. `SkeletonTheme.animationDirection` controls CSS `animation-direction`. These are intentionally separate to avoid naming conflicts.
 
-Instead, SkeletonGroup evolved into both:
-
-- a theme scope
-- a layout container
-
-This reduced API complexity while improving flexibility.
-
----
-
-## Minimal Public API
-
-Only stable components should be exported.
-
-Internal utilities remain private.
-
----
-
-# Performance
-
-The architecture is optimized for:
-
-- minimal DOM depth
-- CSS animations
-- reusable rendering logic
-- low memory overhead
-- tree shaking
-- TypeScript inference
-
-Composite components avoid duplicating implementation.
-
----
-
-# Future Architecture
-
-The architecture is designed to scale.
-
-Future primitives:
-
-```
-BadgeSkeleton
-
-DividerSkeleton
-
-ChipSkeleton
-```
-
-Future composites:
-
-```
-ProfileSkeleton
-
-ArticleSkeleton
-
-DashboardSkeleton
-
-TableSkeleton
-
-FormSkeleton
-```
-
-Future infrastructure:
-
-```
-Storybook
-
-Unit Tests
-
-Visual Regression Tests
-
-Theme Presets
-
-Plugin System
-```
-
-The core architectural principles should remain unchanged regardless of future growth.
-
-- Build primitives first.
-- Compose larger components from primitives.
-- Keep global configuration optional.
-- Prefer composition over duplication.
-- Preserve a minimal, intuitive public API.
+### CSS Custom Properties Over JavaScript Theming
+All animation values are injected as CSS variables. Theme changes propagate through CSS without React re-renders, and `prefers-reduced-motion` is handled in a single CSS media query with no JavaScript involvement.

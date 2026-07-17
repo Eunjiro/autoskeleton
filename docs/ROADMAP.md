@@ -1,16 +1,13 @@
 # AutoSkeleton Roadmap
 
-This roadmap outlines the planned direction of the project.
-
-Items may change as the library evolves.
+This roadmap documents the completed and planned direction of the project. Items may change as the library evolves.
 
 ---
 
-# Version 0.1
+## Version 0.1 — Foundation ✅
 
-## Foundation
-
-- [x] Skeleton
+### Components
+- [x] Skeleton (core primitive)
 - [x] TextSkeleton
 - [x] AvatarSkeleton
 - [x] ButtonSkeleton
@@ -18,147 +15,119 @@ Items may change as the library evolves.
 - [x] SkeletonGroup
 - [x] SkeletonProvider
 - [x] CardSkeleton
-- [x] Theme System
-- [x] TypeScript Support
 
----
+### Infrastructure
+- [x] TypeScript support
+- [x] CSS custom properties for theming
+- [x] Tree-shakable ESM + CJS build
+- [x] Package exports map
 
-## Documentation
-
+### Documentation
 - [x] README
 - [x] DESIGN.md
 - [x] ARCHITECTURE.md
 - [x] SPECIFICATION.md
+- [x] CONTRIBUTING.md
+- [x] ROADMAP.md
 
 ---
 
-# Version 0.2
+## Version 0.2 — Composite Components ✅
 
-## Composite Components
-
-- [ ] ProfileSkeleton
-- [ ] ArticleSkeleton
-- [ ] ProductCardSkeleton
-- [ ] CommentSkeleton
-- [ ] TableSkeleton
-- [ ] DashboardSkeleton
-- [ ] FormSkeleton
-
----
-
-## Layout Improvements
-
-- [ ] Responsive Skeletons
-- [ ] Layout Presets
-- [ ] Better Card Presets
-
----
-
-# Version 0.3
-
-## Animation
-
-- [ ] Custom animation API
-- [ ] Gradient presets
-- [ ] Animation presets
-- [ ] Animation utilities
+- [x] ProfileSkeleton
+- [x] ArticleSkeleton
+- [x] TableSkeleton
+- [x] ListSkeleton
+- [x] DashboardSkeleton
+- [x] FormSkeleton
+- [x] StatisticCardSkeleton
+- [x] MediaObjectSkeleton
+- [x] CommentSkeleton
+- [x] ChatMessageSkeleton
+- [x] ProductCardSkeleton
+- [x] GallerySkeleton
+- [x] SidebarSkeleton
+- [x] NavbarSkeleton
+- [x] PricingCardSkeleton
+- [x] TimelineSkeleton
 
 ---
 
-## Theme
+## Version 0.3 — Animation & Theme ✅
 
-- [ ] Dark Mode Presets
-- [ ] Theme Presets
-- [ ] CSS Variables
-- [ ] Runtime Theme Switching
-
----
-
-# Version 0.4
-
-## Developer Experience
-
-- [ ] Storybook
-- [ ] Playground Website
-- [ ] Live Documentation
-- [ ] Interactive Examples
+- [x] `easing` prop (CSS timing function)
+- [x] `animationDirection` prop (normal / reverse / alternate / alternate-reverse)
+- [x] `DARK_THEME` preset
+- [x] Arbitrary CSS radius strings (e.g. `"6px 12px"`)
+- [x] `prefers-reduced-motion` CSS media query
+- [x] CSS custom properties for all theme values
 
 ---
 
-## Testing
+## Version 0.4 — Developer Experience ✅
 
-- [ ] Unit Tests
-- [ ] Visual Regression Tests
-- [ ] Accessibility Tests
-
----
-
-# Version 0.5
-
-## Performance
-
-- [ ] Memoization improvements
-- [ ] Bundle size optimization
-- [ ] Lazy composite components
-- [ ] Better tree shaking
+- [x] Storybook (react-vite framework)
+- [x] `@storybook/addon-docs` auto-generated documentation
+- [x] `@storybook/addon-a11y` accessibility auditing
+- [x] `@storybook/addon-vitest` story-based tests
+- [x] `@chromatic-com/storybook` visual regression support
+- [x] Full JSDoc on all public props and types
+- [x] `data-testid` forwarding on `Skeleton`
+- [x] Publicly exported `useSkeleton` hook
 
 ---
 
-# Version 1.0
+## Version 0.5 — Performance & Testing ✅
 
-## Stable Release
-
-- [ ] Production-ready API
-- [ ] Full documentation
-- [ ] Storybook complete
-- [ ] 100% TypeScript support
-- [ ] Accessibility review
-- [ ] Performance benchmark
-- [ ] Stable public API
+- [x] `React.memo` on all components
+- [x] `useMemo` for theme objects in `SkeletonProvider` and `SkeletonGroup`
+- [x] Vitest + React Testing Library test suite (66 tests)
+- [x] `@vitest/coverage-v8` coverage support
+- [x] `prepublishOnly` build gate
 
 ---
 
-# Future Ideas
+## Version 1.0 — Stable Release
 
-These ideas are being explored but are not scheduled.
-
-## Components
-
-- DividerSkeleton
-- BadgeSkeleton
-- ChipSkeleton
-- TimelineSkeleton
-- CalendarSkeleton
-- ChartSkeleton
-- CarouselSkeleton
+- [ ] Production-proven API (no breaking changes planned)
+- [ ] 100% test coverage
+- [ ] Full Storybook for all 22+ components
+- [ ] Visual regression baseline with Chromatic
+- [ ] Accessibility audit completed
+- [ ] Performance benchmark published
+- [ ] Playground / documentation website
 
 ---
 
-## Integrations
+## Future Ideas
 
-- Next.js examples
-- Remix examples
-- Astro examples
+These ideas are being explored but are not yet scheduled.
+
+### Components
+- `DividerSkeleton`
+- `BadgeSkeleton`
+- `ChipSkeleton`
+- `CalendarSkeleton`
+- `ChartSkeleton`
+- `CarouselSkeleton`
+
+### Integrations
+- Next.js App Router example project
+- Remix example project
+- Astro example project
 - React Native support
 
----
-
-## Tooling
-
-- CLI generator
-- VS Code snippets
+### Tooling
+- CLI generator (`npx autoskeleton add ProfileSkeleton`)
+- VS Code snippets extension
 - ESLint plugin
 - Figma UI Kit
 
----
-
-## Community
-
-- Example gallery
-- Community templates
-- Plugin ecosystem
+### Community
+- Interactive example gallery
 - Theme marketplace
+- Community templates
 
 ---
 
-This roadmap is a living document and may evolve as AutoSkeleton grows.
+This roadmap is a living document and evolves as AutoSkeleton grows.
