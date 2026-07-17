@@ -1,6 +1,6 @@
 {
   "name": "@gyojiro/autoskeleton-react",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Beautiful, composable loading skeletons for React.",
   "license": "MIT",
   "type": "module",
@@ -10,8 +10,10 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./index.css": "./dist/index.css"
   },
   "files": [
     "dist",

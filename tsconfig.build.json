@@ -5,12 +5,15 @@
     "moduleResolution": "Bundler",
     "jsx": "react-jsx",
 
+    "types": ["vite/client"],
+
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "dist",
 
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowArbitraryExtensions": true
   },
   "include": [
     "src"
