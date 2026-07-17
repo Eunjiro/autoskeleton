@@ -1,45 +1,45 @@
-<div align="center">
-
 # AutoSkeleton
 
 **Beautiful, composable loading skeletons for React.**
 
+A modern skeleton loading library built with React + TypeScript.
+
+Create beautiful loading states with primitive skeletons or ready-made components like cards, avatars, text blocks, and images.
+
 Lightweight • TypeScript First • Customizable • Tree-shakable
 
-</div>
+---
+
+# Features
+
+✨ Beautiful default skeleton animations  
+⚡ Lightweight and fast  
+🧩 Fully composable components  
+🔷 TypeScript first  
+🎨 Customizable themes  
+🌊 Multiple animations  
+🌳 Tree-shakable  
+♿ Accessibility friendly  
+🚀 Zero configuration required  
 
 ---
 
-##  Features
-
--  Beautiful default skeletons
--  Lightweight and fast
--  Fully composable components
--  TypeScript first
--  Multiple animation styles
--  Global and local theming
--  Tree-shakable
--  Accessibility friendly
--  Zero configuration
-
----
-
-## Installation
+# Installation
 
 ```bash
-npm install @autoskeleton/react
+npm install @gyojiro/autoskeleton-react
 ```
 
 or
 
 ```bash
-yarn add @autoskeleton/react
+yarn add @gyojiro/autoskeleton-react
 ```
 
 or
 
 ```bash
-pnpm add @autoskeleton/react
+pnpm add @gyojiro/autoskeleton-react
 ```
 
 ---
@@ -47,21 +47,86 @@ pnpm add @autoskeleton/react
 # Quick Start
 
 ```tsx
-import { Skeleton } from "@autoskeleton/react";
+import {
+  Skeleton
+} from "@gyojiro/autoskeleton-react";
 
 export default function App() {
+
   return (
     <Skeleton
-      width={200}
+      width={300}
       height={20}
     />
   );
+
 }
 ```
 
-No provider required.
+AutoSkeleton works immediately without any setup.
 
-AutoSkeleton works out of the box.
+---
+
+# Real Data Loading Example
+
+AutoSkeleton is designed for real loading states.
+
+Example:
+
+```tsx
+function UserProfile(){
+
+const [user,setUser] = useState(null);
+
+
+useEffect(()=>{
+
+fetch("/api/user")
+.then(res=>res.json())
+.then(data=>setUser(data))
+
+},[]);
+
+
+if(!user){
+
+return (
+<CardSkeleton />
+)
+
+}
+
+
+return (
+
+<div>
+
+<h2>
+{user.name}
+</h2>
+
+<p>
+{user.email}
+</p>
+
+</div>
+
+)
+
+}
+```
+
+Before data loads:
+
+```
+CardSkeleton
+```
+
+After loading:
+
+```
+Real Content
+```
 
 ---
 
@@ -69,142 +134,298 @@ AutoSkeleton works out of the box.
 
 ## Skeleton
 
+The core primitive component.
+
 ```tsx
-<Skeleton />
+<Skeleton
+ width={200}
+ height={20}
+/>
 ```
 
-Basic loading placeholder.
+Props:
+
+```tsx
+<Skeleton
+
+width="100%"
+
+height={20}
+
+variant="default"
+
+animation="wave"
+
+radius="md"
+
+/>
+```
 
 ---
 
-## TextSkeleton
+# TextSkeleton
+
+Generate loading text blocks.
 
 ```tsx
 <TextSkeleton />
 ```
 
-Generate multiple text lines.
+Multiple lines:
+
+```tsx
+<TextSkeleton
+ lines={5}
+/>
+```
+
+Random text widths:
+
+```tsx
+<TextSkeleton
+
+lines={5}
+
+randomizeWidths
+
+/>
+```
+
+Example output:
+
+```
+██████████████
+
+████████████
+
+████████████████
+
+████████
+```
 
 ---
 
-## AvatarSkeleton
+# AvatarSkeleton
+
+Circular user avatar loading.
 
 ```tsx
 <AvatarSkeleton />
 ```
 
-Circular avatar placeholder.
+Custom size:
+
+```tsx
+<AvatarSkeleton
+ size={80}
+/>
+```
 
 ---
 
-## ImageSkeleton
+# ImageSkeleton
+
+Image placeholder.
 
 ```tsx
 <ImageSkeleton />
 ```
 
-Responsive image placeholder.
+Custom dimensions:
+
+```tsx
+<ImageSkeleton
+
+width="100%"
+
+height={300}
+
+/>
+```
 
 ---
 
-## ButtonSkeleton
+# ButtonSkeleton
+
+Button loading state.
 
 ```tsx
 <ButtonSkeleton />
 ```
 
-Button loading placeholder.
+Custom size:
+
+```tsx
+<ButtonSkeleton
+
+width={150}
+
+height={45}
+
+/>
+```
 
 ---
 
-## CardSkeleton
+# CardSkeleton
+
+Complete card loading UI.
 
 ```tsx
 <CardSkeleton />
 ```
 
-Complete loading card built from primitive components.
+Example:
+
+```tsx
+<CardSkeleton
+
+showAvatar
+
+showButton
+
+lines={4}
+
+/>
+```
+
+Output:
+
+```
+[ IMAGE ]
+
+[ AVATAR ]
+
+████████████
+
+████████
+
+██████
+
+
+[ BUTTON ]
+```
 
 ---
 
-## SkeletonGroup
+# SkeletonGroup
+
+Create your own skeleton layouts.
 
 ```tsx
 <SkeletonGroup gap={16}>
-    <AvatarSkeleton />
 
-    <TextSkeleton />
+<AvatarSkeleton/>
+
+<TextSkeleton lines={3}/>
+
+<ButtonSkeleton/>
+
 </SkeletonGroup>
 ```
 
-Arrange skeletons while applying local theme overrides.
+Useful for:
+
+- Profiles
+- Dashboards
+- Lists
+- Custom layouts
 
 ---
 
-## SkeletonProvider
+# SkeletonProvider
+
+Customize your application skeleton theme.
 
 ```tsx
-<SkeletonProvider animation="pulse">
-    <App />
+<SkeletonProvider
+
+animation="pulse"
+
+color="#E5E7EB"
+
+highlight="#F8FAFC"
+
+>
+
+<App/>
+
 </SkeletonProvider>
 ```
 
-Globally customize the loading theme.
-
-Using the provider is optional.
+Provider is optional.
 
 ---
 
 # Animations
 
+Supported animations:
+
 ```tsx
-<Skeleton animation="wave" />
+<Skeleton animation="wave"/>
 
-<Skeleton animation="pulse" />
+<Skeleton animation="pulse"/>
 
-<Skeleton animation="fade" />
+<Skeleton animation="fade"/>
 
-<Skeleton animation="none" />
+<Skeleton animation="none"/>
 ```
 
 ---
 
 # Variants
 
+Available shapes:
+
 ```tsx
-<Skeleton variant="rectangle" />
+<Skeleton variant="default"/>
 
-<Skeleton variant="rounded" />
+<Skeleton variant="rounded"/>
 
-<Skeleton variant="circle" />
-
-<Skeleton variant="pill" />
+<Skeleton variant="circle"/>
 ```
 
 ---
 
-# Theming
+# Custom Theme
 
 Global theme:
 
 ```tsx
 <SkeletonProvider
-    animation="pulse"
-    color="#E5E7EB"
-    highlight="#F8FAFC"
+
+color="#ddd"
+
+highlight="#fff"
+
+duration={1.5}
+
+radius="lg"
+
+animation="wave"
+
 >
-    <App />
+
+<App/>
+
 </SkeletonProvider>
 ```
+
+---
 
 Local override:
 
 ```tsx
 <SkeletonGroup
-    animation="wave"
-    gap={20}
+
+animation="pulse"
+
+gap={20}
+
 >
-    <TextSkeleton />
+
+<TextSkeleton/>
+
 </SkeletonGroup>
 ```
 
@@ -212,26 +433,80 @@ Local override:
 
 # Why AutoSkeleton?
 
-Most skeleton libraries provide only low-level placeholder components.
-
-AutoSkeleton provides both:
-
-- Primitive components
-- Composite loading components
-
-Everything is built through composition.
+Most skeleton libraries only provide:
 
 ```
-Skeleton
-        │
-        ▼
+<Skeleton />
+```
+
+and developers manually build every loading screen.
+
+AutoSkeleton provides:
+
+```
+Primitive Components
+        |
+        |
+        v
+
+Composite Components
+
 TextSkeleton
-        │
-        ▼
+AvatarSkeleton
 CardSkeleton
+ImageSkeleton
+DashboardSkeleton
 ```
 
-This keeps the library flexible while avoiding duplicated rendering logic.
+Benefits:
+
+✅ Less repeated code  
+✅ Faster loading UI development  
+✅ Consistent design system  
+✅ Easy customization  
+✅ Better user experience  
+
+---
+
+# Example Use Cases
+
+AutoSkeleton works well for:
+
+## User Profiles
+
+```tsx
+<CardSkeleton showAvatar/>
+```
+
+## Blog Articles
+
+```tsx
+<TextSkeleton lines={8}/>
+```
+
+## Dashboards
+
+```tsx
+<SkeletonGroup>
+
+<CardSkeleton/>
+
+<CardSkeleton/>
+
+<CardSkeleton/>
+
+</SkeletonGroup>
+```
+
+## Ecommerce Products
+
+```tsx
+<ImageSkeleton/>
+
+<TextSkeleton/>
+
+<ButtonSkeleton/>
+```
 
 ---
 
@@ -241,40 +516,60 @@ This keeps the library flexible while avoiding duplicated rendering logic.
 - TypeScript
 - CSS
 - React Context
-
----
-
-# Documentation
-
-- 📖 DESIGN.md
-- 🏗 ARCHITECTURE.md
-- 📚 SPECIFICATION.md
+- Vite
 
 ---
 
 # Roadmap
 
-- ✅ Skeleton
-- ✅ TextSkeleton
-- ✅ AvatarSkeleton
-- ✅ ImageSkeleton
-- ✅ ButtonSkeleton
-- ✅ CardSkeleton
-- ⏳ ProfileSkeleton
-- ⏳ ArticleSkeleton
-- ⏳ TableSkeleton
-- ⏳ DashboardSkeleton
-- ⏳ Storybook
-- ⏳ Unit Tests
-- ⏳ Visual Regression Tests
+## Completed
+
+✅ Skeleton  
+✅ TextSkeleton  
+✅ AvatarSkeleton  
+✅ ImageSkeleton  
+✅ ButtonSkeleton  
+✅ CardSkeleton  
+✅ SkeletonGroup  
+✅ Theme Provider  
+
+
+## Planned
+
+⏳ ProfileSkeleton
+
+⏳ ArticleSkeleton
+
+⏳ TableSkeleton
+
+⏳ DashboardSkeleton
+
+⏳ FormSkeleton
+
+⏳ Storybook Documentation
+
+⏳ Unit Tests
+
+⏳ Visual Regression Testing
+
+
+---
+
+# Documentation
+
+More documentation:
+
+- DESIGN.md
+- ARCHITECTURE.md
+- SPECIFICATION.md
 
 ---
 
 # Contributing
 
-Contributions, issues, and feature requests are welcome.
+Issues, suggestions, and pull requests are welcome.
 
-Please read the documentation before submitting a pull request.
+Before contributing, please read the project documentation.
 
 ---
 
@@ -284,8 +579,4 @@ MIT License.
 
 ---
 
-<div align="center">
-
-Made with love using React and TypeScript.
-
-</div>
+Made with ❤️ using React and TypeScript.
