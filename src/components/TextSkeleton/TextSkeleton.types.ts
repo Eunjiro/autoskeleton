@@ -1,40 +1,53 @@
 import type { SkeletonProps } from "../Skeleton";
 
-export interface TextSkeletonProps extends SkeletonProps {
+/**
+ * Props for `TextSkeleton`.
+ */
+export interface TextSkeletonProps extends Omit<SkeletonProps, "width" | "height" | "size" | "variant"> {
   /**
-   * Number of lines to render.
+   * Number of text lines to render.
+   * @default 3
    */
   lines?: number;
 
   /**
-   * Space between lines.
+   * Vertical gap between lines in pixels (or CSS string).
+   * @default 8
    */
-  gap?: number;
+  gap?: number | string;
 
   /**
-   * Width of the last line.
+   * Width of the last line. Shortens it to mimic natural paragraph endings.
+   * Ignored when `randomizeWidths` is `true`.
+   * @default "70%"
    */
   lastLineWidth?: number | string;
 
   /**
-   * Height of each line.
+   * Height of each line in pixels (or CSS string).
+   * @default 16
    */
   lineHeight?: number | string;
 
-   /**
-   * Randomize each line's width.
+  /**
+   * When `true`, each line (except the first) gets a random width between
+   * `minLineWidth` and `maxLineWidth`.
+   * @default false
    */
   randomizeWidths?: boolean;
 
   /**
-   * Minimum random width percentage.
+   * Minimum line width percentage when `randomizeWidths` is `true`.
+   * @default 55
    */
   minLineWidth?: number;
 
   /**
-   * Maximum random width percentage.
+   * Maximum line width percentage when `randomizeWidths` is `true`.
+   * @default 90
    */
   maxLineWidth?: number;
 
+  /** Additional CSS class names. */
   className?: string;
 }

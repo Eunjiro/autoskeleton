@@ -1,12 +1,42 @@
+/* ─────────────────────────────────────────────────────────────────────────── *
+ * CSS custom-property defaults                                                *
+ * These are overridden per-element via inline styles set by the component.    *
+ * ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  --skeleton-color: #e5e7eb;
+  --skeleton-highlight: #f9fafb;
+  --skeleton-duration: 1.2s;
+  --skeleton-easing: ease-in-out;
+  --skeleton-direction: normal;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────── *
+ * Base element                                                                *
+ * ─────────────────────────────────────────────────────────────────────────── */
 .skeleton {
   position: relative;
   overflow: hidden;
+  display: block;
   background-color: var(--skeleton-color);
+  /* GPU-composited — avoid layout triggers */
+  will-change: opacity, transform;
+  /* Prevent content from collapsing skeletons */
+  min-height: 1px;
 }
 
-/* Pulse animation */
+/* ─────────────────────────────────────────────────────────────────────────── *
+ * None — static placeholder, no animation                                    *
+ * ─────────────────────────────────────────────────────────────────────────── */
+.skeleton-none {
+  animation: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────── *
+ * Pulse animation                                                             *
+ * ─────────────────────────────────────────────────────────────────────────── */
 .skeleton-pulse {
-  animation: skeleton-pulse var(--skeleton-duration) ease-in-out infinite;
+  animation: skeleton-pulse var(--skeleton-duration) var(--skeleton-easing)
+    var(--skeleton-direction) infinite;
 }
 
 @keyframes skeleton-pulse {
@@ -16,20 +46,22 @@
   }
 
   50% {
-    opacity: 0.5;
+    opacity: 0.45;
   }
 }
 
-
-/* Fade animation */
+/* ─────────────────────────────────────────────────────────────────────────── *
+ * Fade animation                                                              *
+ * ─────────────────────────────────────────────────────────────────────────── */
 .skeleton-fade {
-  animation: skeleton-fade var(--skeleton-duration) ease-in-out infinite;
+  animation: skeleton-fade var(--skeleton-duration) var(--skeleton-easing)
+    var(--skeleton-direction) infinite;
 }
 
 @keyframes skeleton-fade {
   0%,
   100% {
-    opacity: 0.6;
+    opacity: 0.5;
   }
 
   50% {
@@ -37,27 +69,42 @@
   }
 }
 
-
-/* Wave animation */
+/* ─────────────────────────────────────────────────────────────────────────── *
+ * Wave (shimmer) animation                                                    *
+ * Uses a pseudo-element so the base background-color stays stable.           *
+ * ─────────────────────────────────────────────────────────────────────────── */
 .skeleton-wave::after {
   content: "";
   position: absolute;
   inset: 0;
-
   transform: translateX(-100%);
-
   background: linear-gradient(
     90deg,
-    transparent,
-    var(--skeleton-highlight),
-    transparent
+    transparent 0%,
+    var(--skeleton-highlight) 50%,
+    transparent 100%
   );
-
-  animation: skeleton-wave var(--skeleton-duration) infinite;
+  animation: skeleton-wave var(--skeleton-duration) var(--skeleton-easing)
+    var(--skeleton-direction) infinite;
 }
 
 @keyframes skeleton-wave {
   100% {
     transform: translateX(100%);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────── *
+ * Accessibility — respect prefers-reduced-motion                             *
+ * ─────────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-pulse,
+  .skeleton-fade {
+    animation: none;
+  }
+
+  .skeleton-wave::after {
+    animation: none;
+    display: none;
   }
 }

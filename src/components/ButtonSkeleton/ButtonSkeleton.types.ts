@@ -1,7 +1,18 @@
 import type { SkeletonProps } from "../Skeleton";
 
-export interface ButtonSkeletonProps extends SkeletonProps {
+/**
+ * Props for `ButtonSkeleton`.
+ */
+export interface ButtonSkeletonProps extends Omit<SkeletonProps, "variant"> {
+  /**
+   * Width of the button skeleton.
+   * @default 120
+   */
   width?: number | string;
 
+  /**
+   * Height of the button skeleton.
+   * @default 40
+   */
   height?: number | string;
 }

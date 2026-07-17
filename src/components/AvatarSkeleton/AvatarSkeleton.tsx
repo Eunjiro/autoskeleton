@@ -1,9 +1,17 @@
+import { memo } from "react";
+
 import { Skeleton } from "../Skeleton";
 
 import type { AvatarSkeletonProps } from "./AvatarSkeleton.types";
 
-
-export function AvatarSkeleton({
+/**
+ * A circular skeleton placeholder for user avatars and profile pictures.
+ *
+ * ```tsx
+ * <AvatarSkeleton size={48} />
+ * ```
+ */
+export const AvatarSkeleton = memo(function AvatarSkeleton({
   size = 40,
   ...skeletonProps
 }: AvatarSkeletonProps) {
@@ -14,4 +22,4 @@ export function AvatarSkeleton({
       {...skeletonProps}
     />
   );
-}
+});

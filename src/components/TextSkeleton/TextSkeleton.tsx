@@ -1,10 +1,25 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
 import { Skeleton } from "../Skeleton";
 import type { TextSkeletonProps } from "./TextSkeleton.types";
 import { getRandomWidth } from "./TextSkeleton.utils";
 
-export function TextSkeleton({
+/**
+ * A multi-line text skeleton that mimics a paragraph or heading block.
+ *
+ * ```tsx
+ * // Three-line paragraph
+ * <TextSkeleton lines={3} />
+ *
+ * // Heading + subtext
+ * <TextSkeleton lines={1} lineHeight={24} />
+ * <TextSkeleton lines={2} lineHeight={14} />
+ *
+ * // Randomized widths (decorative)
+ * <TextSkeleton lines={4} randomizeWidths />
+ * ```
+ */
+export const TextSkeleton = memo(function TextSkeleton({
   lines = 3,
   gap = 8,
   lastLineWidth = "70%",
@@ -16,30 +31,17 @@ export function TextSkeleton({
 }: TextSkeletonProps) {
   const widths = useMemo(() => {
     return Array.from({ length: lines }, (_, index) => {
-      // First line should always be full width.
-      if (index === 0) {
-        return "100%";
-      }
-
-      // Randomize remaining lines.
-      if (randomizeWidths) {
-        return getRandomWidth(minLineWidth, maxLineWidth);
-      }
-
-      // Last line is shorter when randomization is disabled.
-      if (index === lines - 1) {
-        return lastLineWidth;
-      }
-
+      // First line is always full width.
+      if (index === 0) return "100%";
+      // Randomize remaining lines when requested.
+      if (randomizeWidths) return getRandomWidth(minLineWidth, maxLineWidth);
+      // Last line is shorter by convention.
+      if (index === lines - 1) return lastLineWidth;
       return "100%";
     });
-  }, [
-    lines,
-    randomizeWidths,
-    minLineWidth,
-    maxLineWidth,
-    lastLineWidth,
-  ]);
+    // randomizeWidths intentionally uses random values — keep the seed stable
+    // across re-renders by only regenerating when line count or bounds change.
+  }, [lines, randomizeWidths, minLineWidth, maxLineWidth, lastLineWidth]);
 
   return (
     <div
@@ -59,4 +61,4 @@ export function TextSkeleton({
       ))}
     </div>
   );
-}
+});
