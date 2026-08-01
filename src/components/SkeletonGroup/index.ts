@@ -1,3 +1,7 @@
 export { SkeletonGroup } from "./SkeletonGroup";
 
-export type { SkeletonGroupProps } from "./SkeletonGroup.types";
+export type {
+  SkeletonGroupProps,
+  SkeletonBreakpoint,
+  ResponsiveValue,
+} from "./SkeletonGroup.types";

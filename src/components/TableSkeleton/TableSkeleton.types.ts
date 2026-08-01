@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
@@ -5,6 +7,12 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
  */
 export interface TableSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction"> {
+  /**
+   * Extra content appended after the data rows, for a near-miss layout
+   * without reimplementing the table from primitives.
+   */
+  children?: ReactNode;
+
   /**
    * Number of data rows (excluding header).
    * @default 5

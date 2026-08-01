@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { AvatarSkeleton } from "../AvatarSkeleton";
@@ -35,6 +37,7 @@ export const CardSkeleton = memo(function CardSkeleton({
   lastLineWidth = "70%",
   gap = 16,
   padding = 0,
+  children,
   ...groupProps
 }: CardSkeletonProps) {
   return (
@@ -57,6 +60,8 @@ export const CardSkeleton = memo(function CardSkeleton({
         <TextSkeleton lines={lines} lastLineWidth={lastLineWidth} />
 
         {showButton && <ButtonSkeleton />}
+
+        {children}
       </SkeletonGroup>
     </SkeletonGroup>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { AvatarSkeleton } from "../AvatarSkeleton";
@@ -28,6 +30,7 @@ export const ArticleSkeleton = memo(function ArticleSkeleton({
   showHeading = true,
   gap = 20,
   padding = 0,
+  children,
   ...groupProps
 }: ArticleSkeletonProps) {
   return (
@@ -57,6 +60,8 @@ export const ArticleSkeleton = memo(function ArticleSkeleton({
 
       {/* Body text */}
       <TextSkeleton lines={bodyLines} lineHeight={15} gap={10} />
+
+      {children}
     </SkeletonGroup>
   );
 });

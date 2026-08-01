@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext } from "react";
 import { DEFAULT_THEME } from "../constants/defaultTheme";
 import type { SkeletonTheme } from "../types/theme.types";

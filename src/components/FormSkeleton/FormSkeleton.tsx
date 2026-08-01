@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { ButtonSkeleton } from "../ButtonSkeleton";
@@ -25,6 +27,7 @@ export const FormSkeleton = memo(function FormSkeleton({
   inputHeight = 40,
   showSubmitButton = true,
   gap = 20,
+  children,
   ...groupProps
 }: FormSkeletonProps) {
   return (
@@ -37,6 +40,8 @@ export const FormSkeleton = memo(function FormSkeleton({
       ))}
 
       {showSubmitButton && <ButtonSkeleton width={140} height={44} />}
+
+      {children}
     </SkeletonGroup>
   );
 });

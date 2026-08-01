@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
@@ -5,6 +7,12 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
  */
 export interface TimelineSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction"> {
+  /**
+   * Extra content appended after the last event, for a near-miss layout
+   * without reimplementing the timeline from primitives.
+   */
+  children?: ReactNode;
+
   /**
    * Number of timeline events.
    * @default 4

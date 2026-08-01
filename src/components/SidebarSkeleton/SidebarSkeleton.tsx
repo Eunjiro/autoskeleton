@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { AvatarSkeleton } from "../AvatarSkeleton";
@@ -23,6 +25,7 @@ export const SidebarSkeleton = memo(function SidebarSkeleton({
   showSectionHeadings = false,
   sectionInterval = 3,
   gap = 8,
+  children,
   ...groupProps
 }: SidebarSkeletonProps) {
   return (
@@ -64,6 +67,8 @@ export const SidebarSkeleton = memo(function SidebarSkeleton({
           </SkeletonGroup>
         </SkeletonGroup>
       )}
+
+      {children}
     </SkeletonGroup>
   );
 });

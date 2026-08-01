@@ -2,7 +2,7 @@
 
 **Beautiful, composable loading skeletons for React.**
 
-A production-ready skeleton loading library built with React + TypeScript. Compose rich loading states from a handful of primitives, or drop in one of the 22+ ready-made components for your exact use case.
+A production-ready skeleton loading library built with React + TypeScript. Compose rich loading states from a handful of primitives, or drop in one of the 26+ ready-made components for your exact use case.
 
 **Lightweight · TypeScript First · Composable · Zero Dependencies · Tree-shakable**
 
@@ -11,8 +11,10 @@ A production-ready skeleton loading library built with React + TypeScript. Compo
 ## Features
 
 - ✨ Wave, pulse, and fade animations out of the box
-- ⚡ 20 kB ESM / 14 kB CJS — zero runtime dependencies
-- 🧩 22+ composable components
+- ⚡ 25 kB ESM / 17 kB CJS — zero runtime dependencies
+- 🧩 26+ composable components
+- 🧱 Native `layout="grid"` mode on `SkeletonGroup`, plus responsive `columns`/`direction` via CSS container queries — a grid inside a narrow sidebar responds to the sidebar's width, not the viewport
+- 🔌 `children` on every composite — append extra content (a badge, a legend row) to a near-miss layout without reimplementing it from primitives
 - 🔷 Full TypeScript support with IntelliSense-ready JSDoc
 - 🎨 Flexible theming via `SkeletonProvider` and `SkeletonGroup`
 - 🌊 Per-component animation overrides (`wave`, `pulse`, `fade`, `none`)
@@ -21,7 +23,7 @@ A production-ready skeleton loading library built with React + TypeScript. Compo
 - ♿ `prefers-reduced-motion` respected in CSS
 - ⚡ `React.memo` + `useMemo` throughout for optimal render performance
 - 🌳 Tree-shakable ESM + CommonJS builds
-- 🧪 66 Vitest + React Testing Library tests
+- 🧪 120+ Vitest + React Testing Library tests, plus real-Chromium Storybook tests for layout behavior jsdom can't verify
 - 📖 Storybook stories for every component
 
 ---
@@ -135,9 +137,18 @@ function UserProfile() {
 
 ### Composite components
 
+Every composite accepts `children`, appended after its default composition — for a near-miss layout (the standard card plus a badge, a stat grid plus a footnote) without reimplementing it from primitives:
+
+```tsx
+<CardSkeleton showAvatar>
+  <Skeleton width={64} height={22} radius="full" />
+</CardSkeleton>
+```
+
 | Component | Description |
 |---|---|
 | `CardSkeleton` | Image + text + optional button card |
+| `ChartSkeleton` | Bar, line, or donut chart placeholder |
 | `ArticleSkeleton` | Hero image + title + author + body |
 | `ProfileSkeleton` | Avatar + name + bio + stats + follow button |
 | `TableSkeleton` | Header row + configurable data rows |
@@ -154,6 +165,7 @@ function UserProfile() {
 | `NavbarSkeleton` | Top navigation bar |
 | `PricingCardSkeleton` | Plan name + price + feature list + CTA |
 | `TimelineSkeleton` | Vertical timeline with dots and content |
+| `StoriesBarSkeleton` | Horizontally-scrolling avatar row (Instagram/Snapchat-style stories, or a chip carousel) |
 
 ---
 
@@ -189,7 +201,7 @@ The core primitive. Everything else composes from it.
 | `height` | `number \| string` | `16` | CSS height |
 | `size` | `number \| string` | — | Shorthand for width + height (circles) |
 | `variant` | `"default" \| "rounded" \| "circle"` | `"default"` | Shape preset |
-| `radius` | `SkeletonRadius \| string` | theme | Border radius preset or any CSS string |
+| `radius` | `SkeletonRadius \| string` | theme | Border radius preset or any CSS string. `variant="rounded"` defaults to `"full"` (pill) instead of the theme radius unless overridden; `variant="circle"` ignores it entirely |
 | `animation` | `"wave" \| "pulse" \| "fade" \| "none"` | theme | Animation style |
 | `className` | `string` | — | Additional CSS classes |
 | `style` | `CSSProperties` | — | Inline style overrides |
@@ -244,13 +256,30 @@ import { SkeletonProvider, DARK_THEME } from "@gyojiro/autoskeleton-react";
 
 ## SkeletonGroup
 
-A layout wrapper that arranges children with flexbox and optionally overrides the theme for its subtree.
+A layout wrapper that arranges children with flexbox (or CSS grid) and optionally overrides the theme for its subtree.
 
 ```tsx
 // Horizontal row
 <SkeletonGroup direction="row" gap={12} align="center">
   <AvatarSkeleton />
   <TextSkeleton lines={2} />
+</SkeletonGroup>
+
+// 3-column grid
+<SkeletonGroup layout="grid" columns={3} gap={16}>
+  <ProductCardSkeleton />
+  <ProductCardSkeleton />
+  <ProductCardSkeleton />
+</SkeletonGroup>
+
+// Responsive: 1 column by default, 3 from a 640px container width —
+// this responds to the group's own rendered width via a CSS container
+// query, not the viewport, so it works correctly even nested inside a
+// narrow sidebar or modal.
+<SkeletonGroup layout="grid" columns={{ base: 1, md: 3 }} gap={16}>
+  <ProductCardSkeleton />
+  <ProductCardSkeleton />
+  <ProductCardSkeleton />
 </SkeletonGroup>
 
 // Local dark-mode override
@@ -264,11 +293,15 @@ A layout wrapper that arranges children with flexbox and optionally overrides th
 </SkeletonGroup>
 ```
 
+Every child in a row automatically fills the remaining space next to fixed-size siblings (like an avatar) — no manual `flex: 1` needed.
+
 ### Props
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
-| `direction` | `"row" \| "column"` | `"column"` | Flex direction |
+| `layout` | `"flex" \| "grid"` | `"flex"` | CSS grid instead of flexbox; `direction` is ignored in this mode |
+| `columns` | `ResponsiveValue<number \| string>` | — | Grid column count (`repeat(columns, 1fr)`) or a raw `grid-template-columns` value. Only applies when `layout="grid"` |
+| `direction` | `ResponsiveValue<"row" \| "column">` | `"column"` | Flex direction |
 | `gap` | `number \| string` | `16` | Space between children |
 | `padding` | `number \| string` | `0` | Inner padding |
 | `align` | `CSSProperties["alignItems"]` | `"stretch"` | Cross-axis alignment |
@@ -276,6 +309,12 @@ A layout wrapper that arranges children with flexbox and optionally overrides th
 | `aria-label` | `string` | — | Accessible region label (enables `role="status"`) |
 | `aria-busy` | `boolean` | `true` | Marks the region as loading |
 | `...SkeletonTheme` | — | inherited | Any theme props override the subtree |
+
+`columns` and `direction` both accept a `ResponsiveValue<T>` — either a constant, or a `{ base, sm, md, lg, xl }` object keyed by container-width breakpoint (`sm`=480px, `md`=640px, `lg`=800px, `xl`=1024px):
+
+```tsx
+import type { ResponsiveValue } from "@gyojiro/autoskeleton-react";
+```
 
 ---
 

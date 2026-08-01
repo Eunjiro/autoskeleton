@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
@@ -5,6 +7,12 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
  */
 export interface MediaObjectSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction"> {
+  /**
+   * Extra content appended after the text block, for a near-miss layout
+   * without reimplementing the media object from primitives.
+   */
+  children?: ReactNode;
+
   /**
    * Width/height of the leading media placeholder in pixels.
    * @default 64

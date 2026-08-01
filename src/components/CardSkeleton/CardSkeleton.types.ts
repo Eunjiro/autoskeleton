@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
@@ -5,6 +7,20 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
  */
 export interface CardSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction" | "align" | "justify"> {
+  /**
+   * Extra content appended after the default composition (image → avatar
+   * row → text → button), inside the same content block — for a near-miss
+   * layout that's the standard card plus one or two extra elements (a
+   * badge, a tag row, a secondary line) without reimplementing the whole
+   * card from primitives.
+   *
+   * ```tsx
+   * <CardSkeleton>
+   *   <Skeleton width={60} height={20} radius="full" />
+   * </CardSkeleton>
+   * ```
+   */
+  children?: ReactNode;
   /**
    * Layout direction of the card.
    * - `"column"` — image on top, content below (default).

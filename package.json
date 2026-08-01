@@ -1,6 +1,6 @@
 {
   "name": "@gyojiro/autoskeleton-react",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Beautiful, composable loading skeletons for React.",
   "license": "MIT",
   "type": "module",

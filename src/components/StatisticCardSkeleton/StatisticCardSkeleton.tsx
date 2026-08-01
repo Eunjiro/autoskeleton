@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { Skeleton } from "../Skeleton";
@@ -26,6 +28,7 @@ export const StatisticCardSkeleton = memo(function StatisticCardSkeleton({
   iconSize = 40,
   metricWidth = "60%",
   gap = 12,
+  children,
   ...groupProps
 }: StatisticCardSkeletonProps) {
   return (
@@ -41,6 +44,8 @@ export const StatisticCardSkeleton = memo(function StatisticCardSkeleton({
 
       {/* Trend / secondary label */}
       <Skeleton width="40%" height={12} />
+
+      {children}
     </SkeletonGroup>
   );
 });

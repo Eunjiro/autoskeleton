@@ -1,5 +1,8 @@
+"use client";
+
 import { memo } from "react";
 
+import { ChartSkeleton } from "../ChartSkeleton";
 import { Skeleton } from "../Skeleton";
 import { SkeletonGroup } from "../SkeletonGroup";
 import { StatisticCardSkeleton } from "../StatisticCardSkeleton";
@@ -17,27 +20,26 @@ import type { DashboardSkeletonProps } from "./DashboardSkeleton.types";
  *
  * // Compact dashboard without table
  * <DashboardSkeleton tableRows={0} chartHeight={200} />
+ *
+ * // Stat cards wrap to 2 columns below a 640px container width
+ * <DashboardSkeleton statCardColumns={{ base: 2, md: 4 }} />
  * ```
  */
 export const DashboardSkeleton = memo(function DashboardSkeleton({
   statCards = 4,
+  statCardColumns,
   showChart = true,
   chartHeight = 280,
+  chartType = "bar",
   tableRows = 5,
   gap = 24,
+  children,
   ...groupProps
 }: DashboardSkeletonProps) {
   return (
     <SkeletonGroup gap={gap} {...groupProps}>
       {/* KPI / stat cards row */}
-      <SkeletonGroup
-        direction="row"
-        gap={16}
-        style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${statCards}, 1fr)`,
-        }}
-      >
+      <SkeletonGroup layout="grid" columns={statCardColumns ?? statCards} gap={16}>
         {Array.from({ length: statCards }).map((_, i) => (
           <StatisticCardSkeleton key={i} gap={10} />
         ))}
@@ -47,7 +49,7 @@ export const DashboardSkeleton = memo(function DashboardSkeleton({
       {showChart && (
         <SkeletonGroup gap={8}>
           <Skeleton width="30%" height={18} />
-          <Skeleton width="100%" height={chartHeight} radius="md" />
+          <ChartSkeleton type={chartType} height={chartHeight} />
         </SkeletonGroup>
       )}
 
@@ -61,6 +63,8 @@ export const DashboardSkeleton = memo(function DashboardSkeleton({
           <TableSkeleton rows={tableRows} columns={5} />
         </SkeletonGroup>
       )}
+
+      {children}
     </SkeletonGroup>
   );
 });

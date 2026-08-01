@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
@@ -5,6 +7,13 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
  */
 export interface ProfileSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction" | "align"> {
+  /**
+   * Extra content appended after the default composition (avatar → name →
+   * bio → stats → button) — for a near-miss layout that's the standard
+   * profile plus one or two extra elements, without reimplementing the
+   * whole thing from primitives.
+   */
+  children?: ReactNode;
   /**
    * Diameter of the profile avatar in pixels.
    * @default 80

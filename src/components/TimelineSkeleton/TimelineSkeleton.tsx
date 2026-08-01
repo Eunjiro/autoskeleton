@@ -1,3 +1,5 @@
+"use client";
+
 import { memo, type CSSProperties } from "react";
 
 import { Skeleton } from "../Skeleton";
@@ -23,6 +25,7 @@ export const TimelineSkeleton = memo(function TimelineSkeleton({
   lines = 2,
   showTimestamp = true,
   gap = 0,
+  children,
   ...groupProps
 }: TimelineSkeletonProps) {
   return (
@@ -81,6 +84,8 @@ export const TimelineSkeleton = memo(function TimelineSkeleton({
           </SkeletonGroup>
         );
       })}
+
+      {children}
     </SkeletonGroup>
   );
 });

@@ -39,7 +39,10 @@ export interface SkeletonProps {
   /**
    * Border-radius preset or any valid CSS radius string.
    *
-   * Falls back to the theme `radius` value when omitted.
+   * Falls back to the theme `radius` value when omitted — except for
+   * `variant="rounded"`, which defaults to `"full"` (pill) instead of the
+   * theme radius, and `variant="circle"`, which ignores `radius` entirely
+   * (always a perfect circle). Both can still be overridden explicitly.
    */
   radius?: SkeletonRadius;
 

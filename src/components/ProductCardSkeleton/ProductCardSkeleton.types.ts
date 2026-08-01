@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
@@ -5,6 +7,12 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
  */
 export interface ProductCardSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction"> {
+  /**
+   * Extra content appended after the "Add to cart" button, for a near-miss
+   * layout without reimplementing the product card from primitives.
+   */
+  children?: ReactNode;
+
   /**
    * Height of the product image placeholder in pixels.
    * @default 220

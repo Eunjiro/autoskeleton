@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
@@ -5,6 +7,12 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
  */
 export interface NavbarSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction"> {
+  /**
+   * Extra content appended after the right-side actions, for a near-miss
+   * layout without reimplementing the navbar from primitives.
+   */
+  children?: ReactNode;
+
   /**
    * Show a logo placeholder on the left.
    * @default true

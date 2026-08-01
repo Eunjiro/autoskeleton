@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { ButtonSkeleton } from "../ButtonSkeleton";
@@ -26,6 +28,7 @@ export const ProductCardSkeleton = memo(function ProductCardSkeleton({
   showRating = true,
   showButton = true,
   gap = 12,
+  children,
   ...groupProps
 }: ProductCardSkeletonProps) {
   return (
@@ -54,6 +57,8 @@ export const ProductCardSkeleton = memo(function ProductCardSkeleton({
 
       {/* Add to cart */}
       {showButton && <ButtonSkeleton width="100%" height={40} />}
+
+      {children}
     </SkeletonGroup>
   );
 });

@@ -21,6 +21,7 @@ export * from "./components/TextSkeleton";
 // ─── Composite components ────────────────────────────────────────────────────
 export * from "./components/ArticleSkeleton";
 export * from "./components/CardSkeleton";
+export * from "./components/ChartSkeleton";
 export * from "./components/ChatMessageSkeleton";
 export * from "./components/CommentSkeleton";
 export * from "./components/DashboardSkeleton";
@@ -34,6 +35,7 @@ export * from "./components/ProductCardSkeleton";
 export * from "./components/ProfileSkeleton";
 export * from "./components/SidebarSkeleton";
 export * from "./components/StatisticCardSkeleton";
+export * from "./components/StoriesBarSkeleton";
 export * from "./components/TableSkeleton";
 export * from "./components/TimelineSkeleton";
 

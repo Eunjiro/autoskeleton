@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
@@ -5,6 +7,12 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
  */
 export interface ArticleSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction" | "align"> {
+  /**
+   * Extra content appended after the body text, for a near-miss layout
+   * without reimplementing the article from primitives.
+   */
+  children?: ReactNode;
+
   /** Show a hero image placeholder at the top. @default true */
   showHeroImage?: boolean;
 

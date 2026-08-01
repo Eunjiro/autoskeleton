@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { AvatarSkeleton } from "../AvatarSkeleton";
@@ -23,6 +25,7 @@ export const ChatMessageSkeleton = memo(function ChatMessageSkeleton({
   messages = 4,
   showInput = true,
   gap = 16,
+  children,
   ...groupProps
 }: ChatMessageSkeletonProps) {
   return (
@@ -55,10 +58,12 @@ export const ChatMessageSkeleton = memo(function ChatMessageSkeleton({
       {/* Message input bar */}
       {showInput && (
         <SkeletonGroup direction="row" gap={10} align="center">
-          <Skeleton width="100%" height={44} radius="full" style={{ flex: 1 }} />
+          <Skeleton width="100%" height={44} radius="full" />
           <Skeleton width={44} height={44} variant="circle" />
         </SkeletonGroup>
       )}
+
+      {children}
     </SkeletonGroup>
   );
 });

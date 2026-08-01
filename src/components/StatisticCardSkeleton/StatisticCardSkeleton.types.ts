@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
@@ -5,6 +7,12 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
  */
 export interface StatisticCardSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction"> {
+  /**
+   * Extra content appended after the trend label, for a near-miss layout
+   * without reimplementing the stat card from primitives.
+   */
+  children?: ReactNode;
+
   /**
    * Show an icon placeholder in the top-right corner.
    * @default true

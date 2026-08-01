@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { Skeleton } from "../Skeleton";
@@ -20,6 +22,7 @@ export const NavbarSkeleton = memo(function NavbarSkeleton({
   navLinks = 4,
   actions = 2,
   gap = 0,
+  children,
   ...groupProps
 }: NavbarSkeletonProps) {
   return (
@@ -60,6 +63,8 @@ export const NavbarSkeleton = memo(function NavbarSkeleton({
           ))}
         </SkeletonGroup>
       )}
+
+      {children}
     </SkeletonGroup>
   );
 });

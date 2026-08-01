@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { AvatarSkeleton } from "../AvatarSkeleton";
@@ -24,6 +26,7 @@ export const MediaObjectSkeleton = memo(function MediaObjectSkeleton({
   lines = 2,
   mediaPosition = "left",
   gap = 16,
+  children,
   ...groupProps
 }: MediaObjectSkeletonProps) {
   const media =
@@ -39,9 +42,7 @@ export const MediaObjectSkeleton = memo(function MediaObjectSkeleton({
     );
 
   const content = (
-    <div style={{ flex: 1, minWidth: 0 }}>
-      <TextSkeleton lines={lines} lineHeight={15} gap={8} lastLineWidth="60%" />
-    </div>
+    <TextSkeleton lines={lines} lineHeight={15} gap={8} lastLineWidth="60%" />
   );
 
   return (
@@ -57,6 +58,8 @@ export const MediaObjectSkeleton = memo(function MediaObjectSkeleton({
           {media}
         </>
       )}
+
+      {children}
     </SkeletonGroup>
   );
 });

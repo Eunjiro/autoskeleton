@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
@@ -5,6 +7,12 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
  */
 export interface PricingCardSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction"> {
+  /**
+   * Extra content appended after the CTA button, for a near-miss layout
+   * without reimplementing the pricing card from primitives.
+   */
+  children?: ReactNode;
+
   /**
    * Number of feature list items.
    * @default 5

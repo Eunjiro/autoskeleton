@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { AvatarSkeleton } from "../AvatarSkeleton";
@@ -28,6 +30,7 @@ export const ListSkeleton = memo(function ListSkeleton({
   lines = 1,
   showTrailing = false,
   gap = 16,
+  children,
   ...groupProps
 }: ListSkeletonProps) {
   return (
@@ -41,18 +44,18 @@ export const ListSkeleton = memo(function ListSkeleton({
         >
           {showIcon && <AvatarSkeleton size={iconSize} />}
 
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <TextSkeleton
-              lines={lines}
-              lineHeight={lines === 1 ? 16 : 14}
-              gap={6}
-              lastLineWidth={lines > 1 ? "65%" : "100%"}
-            />
-          </div>
+          <TextSkeleton
+            lines={lines}
+            lineHeight={lines === 1 ? 16 : 14}
+            gap={6}
+            lastLineWidth={lines > 1 ? "65%" : "100%"}
+          />
 
           {showTrailing && <Skeleton width={24} height={24} radius="sm" />}
         </SkeletonGroup>
       ))}
+
+      {children}
     </SkeletonGroup>
   );
 });

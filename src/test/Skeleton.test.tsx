@@ -62,6 +62,54 @@ describe("Skeleton", () => {
     expect(el.style.borderRadius).toBe("50%");
   });
 
+  it('resolves radius="none" to a sharp corner', () => {
+    const { container } = render(<Skeleton radius="none" />);
+    const el = container.firstChild as HTMLElement;
+    expect(el.style.borderRadius).toBe("0px");
+  });
+
+  it("passes an arbitrary CSS radius string through unchanged", () => {
+    const { container } = render(<Skeleton radius="6px 12px" />);
+    const el = container.firstChild as HTMLElement;
+    expect(el.style.borderRadius).toBe("6px 12px");
+  });
+
+  describe("radius resolution per variant", () => {
+    // Regression coverage for a bug where `variant="rounded"` and
+    // `variant="circle"` both hardcoded their border-radius and silently
+    // ignored the `radius` prop (and the theme's `radius`) entirely.
+
+    it("rounded variant defaults to a pill when radius is omitted", () => {
+      const { container } = render(<Skeleton variant="rounded" />);
+      const el = container.firstChild as HTMLElement;
+      expect(el.style.borderRadius).toBe("9999px");
+    });
+
+    it("rounded variant respects an explicit radius override", () => {
+      const { container } = render(<Skeleton variant="rounded" radius="md" />);
+      const el = container.firstChild as HTMLElement;
+      expect(el.style.borderRadius).toBe("8px");
+    });
+
+    it("circle variant ignores an explicit radius override", () => {
+      const { container } = render(
+        <Skeleton variant="circle" size={40} radius="md" />,
+      );
+      const el = container.firstChild as HTMLElement;
+      expect(el.style.borderRadius).toBe("50%");
+    });
+
+    it("default variant still falls back to the theme radius", () => {
+      const { container } = render(
+        <SkeletonProvider radius="lg">
+          <Skeleton />
+        </SkeletonProvider>,
+      );
+      const el = container.firstChild as HTMLElement;
+      expect(el.style.borderRadius).toBe("12px");
+    });
+  });
+
   it("inherits color from SkeletonProvider", () => {
     const { container } = render(
       <SkeletonProvider color="#FF0000">

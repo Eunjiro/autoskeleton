@@ -8,7 +8,10 @@ interface SkeletonDimensionsOptions {
   width?: number | string;
   height?: number | string;
   size?: number | string;
-  radius: SkeletonRadius;
+  /** The raw `radius` prop, if the caller passed one explicitly. */
+  radius?: SkeletonRadius;
+  /** The theme's `radius` value, used as the fallback for `variant="default"`. */
+  themeRadius: SkeletonRadius;
 }
 
 /**
@@ -52,9 +55,12 @@ export function getSkeletonDimensions({
   height,
   size,
   radius,
+  themeRadius,
 }: SkeletonDimensionsOptions) {
   switch (variant) {
     case "circle":
+      // Always a perfect circle — `radius` is intentionally not applied here,
+      // since any value other than "50%" would break the circular shape.
       return {
         width: size ?? 40,
         height: size ?? 40,
@@ -63,10 +69,13 @@ export function getSkeletonDimensions({
       };
 
     case "rounded":
+      // Pill-shaped by default, regardless of the ambient theme radius —
+      // "rounded" is a deliberately fixed, large-corner look. An explicit
+      // `radius` prop still overrides it.
       return {
         width: width ?? "100%",
         height: height ?? 16,
-        borderRadius: "9999px",
+        borderRadius: getRadiusValue(radius ?? "full"),
       };
 
     case "default":
@@ -74,7 +83,7 @@ export function getSkeletonDimensions({
       return {
         width: width ?? "100%",
         height: height ?? 16,
-        borderRadius: getRadiusValue(radius),
+        borderRadius: getRadiusValue(radius ?? themeRadius),
       };
   }
 }

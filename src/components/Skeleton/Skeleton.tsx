@@ -1,6 +1,9 @@
+"use client";
+
 import { memo, type CSSProperties } from "react";
 
 import { useSkeleton } from "../../hooks/useSkeleton";
+import { useSkeletonLayoutDirection } from "../../hooks/useSkeletonLayoutDirection";
 import type { SkeletonProps } from "./Skeleton.types";
 import { getSkeletonDimensions } from "./Skeleton.utils";
 
@@ -39,8 +42,8 @@ export const Skeleton = memo(function Skeleton({
   "data-testid": testId,
 }: SkeletonProps) {
   const theme = useSkeleton();
+  const layoutDirection = useSkeletonLayoutDirection();
 
-  const resolvedRadius = radius ?? theme.radius;
   const resolvedAnimation = animation ?? theme.animation;
 
   const dimensions = getSkeletonDimensions({
@@ -48,8 +51,22 @@ export const Skeleton = memo(function Skeleton({
     width,
     height,
     size,
-    radius: resolvedRadius,
+    radius,
+    themeRadius: theme.radius,
   });
+
+  // A flex item's main-axis size defaults to its content size, and a
+  // percentage width can't contribute to that (the containing block it
+  // would resolve against is itself what's being computed) — so it
+  // collapses to 0 instead of filling the row. An explicit flex-basis
+  // sidesteps that computation. Only the row's main axis is affected;
+  // column-direction cross-axis sizing already resolves normally.
+  const isPercentageWidth =
+    typeof dimensions.width === "string" && dimensions.width.trim().endsWith("%");
+  const fillStyle: CSSProperties | undefined =
+    layoutDirection === "row" && isPercentageWidth
+      ? { flexGrow: 1, flexShrink: 1, flexBasis: 0, minWidth: 0 }
+      : undefined;
 
   const cssVars = {
     "--skeleton-color": theme.color,
@@ -74,6 +91,7 @@ export const Skeleton = memo(function Skeleton({
         ...dimensions,
         backgroundColor: theme.color,
         ...cssVars,
+        ...fillStyle,
         ...style,
       }}
     />

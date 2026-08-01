@@ -1,5 +1,6 @@
+import { renderToString } from "react-dom/server";
 import { render } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 import { TextSkeleton } from "../components/TextSkeleton";
 import { AvatarSkeleton } from "../components/AvatarSkeleton";
@@ -18,6 +19,54 @@ describe("TextSkeleton", () => {
   it("renders 1 line with lines=1", () => {
     const { container } = render(<TextSkeleton lines={1} />);
     expect(container.querySelectorAll(".skeleton")).toHaveLength(1);
+  });
+
+  describe("randomizeWidths (SSR hydration safety)", () => {
+    it("never calls Math.random() while server-rendering, so SSR output is deterministic", () => {
+      // Regression test for a bug where randomized widths were computed
+      // directly in render via Math.random(). Since Math.random() isn't
+      // seeded, every renderToString() call (and the client's first render
+      // pass during hydration) produced different markup for the same
+      // props — exactly the condition that causes React hydration mismatches
+      // in a real browser. The fix defers randomization to an effect, which
+      // never runs during renderToString(), so the SSR markup for
+      // randomizeWidths={true} must be byte-for-byte identical to
+      // randomizeWidths={false} — and identical across repeated calls.
+      const randomSpy = vi.spyOn(Math, "random").mockReturnValue(0.1);
+
+      const randomizedHtml = renderToString(
+        <TextSkeleton lines={4} randomizeWidths minLineWidth={20} maxLineWidth={80} />,
+      );
+      const plainHtml = renderToString(
+        <TextSkeleton lines={4} minLineWidth={20} maxLineWidth={80} />,
+      );
+      expect(randomizedHtml).toBe(plainHtml);
+
+      randomSpy.mockReturnValue(0.9);
+      const randomizedHtmlAgain = renderToString(
+        <TextSkeleton lines={4} randomizeWidths minLineWidth={20} maxLineWidth={80} />,
+      );
+      expect(randomizedHtmlAgain).toBe(randomizedHtml);
+
+      expect(randomSpy).not.toHaveBeenCalled();
+
+      randomSpy.mockRestore();
+    });
+
+    it("still applies randomized widths after mount", async () => {
+      const randomSpy = vi.spyOn(Math, "random").mockReturnValue(0.5);
+
+      const { container } = render(
+        <TextSkeleton lines={3} randomizeWidths minLineWidth={20} maxLineWidth={80} />,
+      );
+
+      const lineEls = container.querySelectorAll<HTMLElement>(".skeleton");
+      expect(lineEls[0].style.width).toBe("100%");
+      // minLineWidth=20, maxLineWidth=80, Math.random()=0.5 -> floor(0.5*61+20) = 50%
+      expect(lineEls[1].style.width).toBe("50%");
+
+      randomSpy.mockRestore();
+    });
   });
 });
 
@@ -44,6 +93,12 @@ describe("ButtonSkeleton", () => {
     const el = container.firstChild as HTMLElement;
     expect(el.style.width).toBe("120px");
     expect(el.style.height).toBe("40px");
+  });
+
+  it("renders a rectangular button when radius is overridden", () => {
+    const { container } = render(<ButtonSkeleton radius="md" />);
+    const el = container.firstChild as HTMLElement;
+    expect(el.style.borderRadius).toBe("8px");
   });
 });
 
@@ -77,5 +132,16 @@ describe("CardSkeleton", () => {
     expect(() =>
       render(<CardSkeleton showImage={false} showAvatar showButton />),
     ).not.toThrow();
+  });
+
+  it("appends children after the default composition instead of replacing it", () => {
+    const { container, getByTestId } = render(
+      <CardSkeleton>
+        <div data-testid="badge">extra</div>
+      </CardSkeleton>,
+    );
+    // The default button (default showButton=true) and the extra child both render.
+    expect(getByTestId("badge")).toBeInTheDocument();
+    expect(container.querySelectorAll(".skeleton").length).toBeGreaterThan(0);
   });
 });

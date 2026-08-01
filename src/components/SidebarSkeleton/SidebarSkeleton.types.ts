@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
@@ -5,6 +7,12 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
  */
 export interface SidebarSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction"> {
+  /**
+   * Extra content appended after the user profile block, for a near-miss
+   * layout without reimplementing the sidebar from primitives.
+   */
+  children?: ReactNode;
+
   /**
    * Number of navigation links to render.
    * @default 6

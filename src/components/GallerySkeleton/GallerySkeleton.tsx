@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { ImageSkeleton } from "../ImageSkeleton";
@@ -16,6 +18,9 @@ import type { GallerySkeletonProps } from "./GallerySkeleton.types";
  *
  * // 4-column landscape grid
  * <GallerySkeleton columns={4} aspectRatio="4/3" items={12} />
+ *
+ * // Responsive: 2 columns by default, 4 from a 640px container width
+ * <GallerySkeleton columns={{ base: 2, md: 4 }} items={12} />
  * ```
  */
 export const GallerySkeleton = memo(function GallerySkeleton({
@@ -23,16 +28,14 @@ export const GallerySkeleton = memo(function GallerySkeleton({
   columns = 3,
   aspectRatio = "1",
   cellGap = 8,
+  children,
   ...groupProps
 }: GallerySkeletonProps) {
   return (
     <SkeletonGroup
-      gap={0}
-      style={{
-        display: "grid",
-        gridTemplateColumns: `repeat(${columns}, 1fr)`,
-        gap: cellGap,
-      }}
+      layout="grid"
+      columns={columns}
+      gap={cellGap}
       {...groupProps}
     >
       {Array.from({ length: items }).map((_, i) => (
@@ -42,6 +45,8 @@ export const GallerySkeleton = memo(function GallerySkeleton({
           radius="sm"
         />
       ))}
+
+      {children}
     </SkeletonGroup>
   );
 });

@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { Skeleton } from "../Skeleton";
@@ -27,10 +29,12 @@ export const TableSkeleton = memo(function TableSkeleton({
   rowHeight = 16,
   rowGap = 12,
   gap = 0,
+  children,
   ...groupProps
 }: TableSkeletonProps) {
   const renderRow = (height: number, keyPrefix: string) => (
     <SkeletonGroup
+      key={keyPrefix}
       direction="row"
       gap={16}
       align="center"
@@ -41,7 +45,6 @@ export const TableSkeleton = memo(function TableSkeleton({
           key={`${keyPrefix}-${col}`}
           width="100%"
           height={height}
-          style={{ flex: 1 }}
         />
       ))}
     </SkeletonGroup>
@@ -64,6 +67,8 @@ export const TableSkeleton = memo(function TableSkeleton({
           renderRow(rowHeight, `row-${row}`),
         )}
       </SkeletonGroup>
+
+      {children}
     </SkeletonGroup>
   );
 });

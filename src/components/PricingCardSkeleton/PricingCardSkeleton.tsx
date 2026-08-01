@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { ButtonSkeleton } from "../ButtonSkeleton";
@@ -23,6 +25,7 @@ export const PricingCardSkeleton = memo(function PricingCardSkeleton({
   showBadge = false,
   showButton = true,
   gap = 16,
+  children,
   ...groupProps
 }: PricingCardSkeletonProps) {
   return (
@@ -51,6 +54,8 @@ export const PricingCardSkeleton = memo(function PricingCardSkeleton({
 
       {/* CTA button */}
       {showButton && <ButtonSkeleton width="100%" height={44} />}
+
+      {children}
     </SkeletonGroup>
   );
 });

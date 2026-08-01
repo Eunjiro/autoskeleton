@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
@@ -5,6 +7,12 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
  */
 export interface CommentSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction"> {
+  /**
+   * Extra content appended after the comment list, for a near-miss layout
+   * without reimplementing the thread from primitives.
+   */
+  children?: ReactNode;
+
   /**
    * Number of comment items to render.
    * @default 3

@@ -3,6 +3,7 @@ import type { ComponentType } from "react";
 
 import "../src/index.css";
 import { CardSkeleton } from "../src/components/CardSkeleton";
+import { Skeleton } from "../src/components/Skeleton";
 import { SkeletonProvider } from "../src/context/SkeletonProvider";
 import { DARK_THEME } from "../src/constants/defaultTheme";
 
@@ -44,6 +45,14 @@ export const HorizontalCard: Story = {
     imageHeight: 120,
     lines: 2,
   },
+};
+
+export const WithExtraContent: Story = {
+  render: () => (
+    <CardSkeleton>
+      <Skeleton width={60} height={20} radius="full" />
+    </CardSkeleton>
+  ),
 };
 
 export const DarkTheme: Story = {

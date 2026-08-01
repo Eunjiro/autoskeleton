@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { AvatarSkeleton } from "../AvatarSkeleton";
@@ -22,6 +24,7 @@ export const CommentSkeleton = memo(function CommentSkeleton({
   avatarSize = 36,
   showActions = false,
   gap = 20,
+  children,
   ...groupProps
 }: CommentSkeletonProps) {
   return (
@@ -50,6 +53,8 @@ export const CommentSkeleton = memo(function CommentSkeleton({
           </SkeletonGroup>
         </SkeletonGroup>
       ))}
+
+      {children}
     </SkeletonGroup>
   );
 });

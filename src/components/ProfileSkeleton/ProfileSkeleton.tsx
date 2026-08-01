@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 
 import { AvatarSkeleton } from "../AvatarSkeleton";
@@ -29,6 +31,7 @@ export const ProfileSkeleton = memo(function ProfileSkeleton({
   showButton = true,
   gap = 16,
   padding = 0,
+  children,
   ...groupProps
 }: ProfileSkeletonProps) {
   return (
@@ -70,6 +73,8 @@ export const ProfileSkeleton = memo(function ProfileSkeleton({
 
       {/* Action button */}
       {showButton && <ButtonSkeleton width={120} height={36} />}
+
+      {children}
     </SkeletonGroup>
   );
 });

@@ -1,4 +1,6 @@
-import type { SkeletonGroupProps } from "../SkeletonGroup";
+import type { ReactNode } from "react";
+
+import type { ResponsiveValue, SkeletonGroupProps } from "../SkeletonGroup";
 
 /**
  * Props for `DashboardSkeleton`.
@@ -6,10 +8,25 @@ import type { SkeletonGroupProps } from "../SkeletonGroup";
 export interface DashboardSkeletonProps
   extends Omit<SkeletonGroupProps, "children" | "direction"> {
   /**
+   * Extra content appended after the table section, for a near-miss layout
+   * without reimplementing the dashboard from primitives.
+   */
+  children?: ReactNode;
+
+  /**
    * Number of statistic cards in the top row.
    * @default 4
    */
   statCards?: number;
+
+  /**
+   * Number of columns in the stat-card grid. Defaults to `statCards` (one
+   * column per card, no wrapping). Pass a smaller number, or a
+   * `{ base, sm, md, lg, xl }` object (see `ResponsiveValue`), to wrap the
+   * cards onto multiple rows instead of always laying them out in one.
+   * @default statCards
+   */
+  statCardColumns?: ResponsiveValue<number | string>;
 
   /**
    * Show a large chart placeholder below the stat cards.
@@ -22,6 +39,12 @@ export interface DashboardSkeletonProps
    * @default 280
    */
   chartHeight?: number;
+
+  /**
+   * Chart shape to mimic. See `ChartSkeleton`.
+   * @default "bar"
+   */
+  chartType?: "bar" | "line" | "donut";
 
   /**
    * Number of table rows to render below the chart.
