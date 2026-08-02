@@ -114,6 +114,41 @@ describe("ImageSkeleton", () => {
     const el = container.firstChild as HTMLElement;
     expect(el.style.aspectRatio).toBe("16/9");
   });
+
+  it("forces height:auto when aspectRatio is set, instead of Skeleton's default 16px", () => {
+    // Regression test: Skeleton's own "no height given" fallback is 16px,
+    // which used to render as an explicit `height: 16px` inline style that
+    // silently defeated the `aspect-ratio` CSS property (aspect-ratio only
+    // computes a dimension left as "auto" — it never overrides one that's
+    // already definite). The rendered box looked like a thin text line
+    // instead of an image placeholder. jsdom doesn't run real layout, so
+    // this only checks the mechanism; see ImageSkeleton.stories.tsx's
+    // "AspectRatioRendersARealBox" story for the real-browser confirmation.
+    const { container } = render(<ImageSkeleton aspectRatio="16/9" />);
+    const el = container.firstChild as HTMLElement;
+    expect(el.style.height).toBe("auto");
+    expect(el.style.aspectRatio).toBe("16/9");
+  });
+
+  it("still lets an explicit style.height win over the aspectRatio default", () => {
+    const { container } = render(
+      <ImageSkeleton aspectRatio="16/9" style={{ height: 300 }} />,
+    );
+    const el = container.firstChild as HTMLElement;
+    expect(el.style.height).toBe("300px");
+  });
+
+  it("does not drop aspectRatio when the caller also passes a style prop", () => {
+    // Regression test: `{...skeletonProps}` used to spread after the
+    // computed `style`, so a caller-provided `style` object silently
+    // clobbered the merged aspectRatio/height instead of extending it.
+    const { container } = render(
+      <ImageSkeleton aspectRatio="4/3" style={{ border: "1px solid red" }} />,
+    );
+    const el = container.firstChild as HTMLElement;
+    expect(el.style.aspectRatio).toBe("4/3");
+    expect(el.style.border).toBe("1px solid red");
+  });
 });
 
 describe("CardSkeleton", () => {

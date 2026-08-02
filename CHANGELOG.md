@@ -7,6 +7,23 @@ follows [Semantic Versioning](https://semver.org/).
 For the version-by-version history before this file existed (`0.1.0` →
 `1.0.1`), see [docs/ROADMAP.md](https://github.com/Eunjiro/autoskeleton-web/blob/master/docs/ROADMAP.md).
 
+## [1.1.1]
+
+### Fixed
+
+- `ImageSkeleton`'s `aspectRatio` prop rendered as a thin ~16px-tall bar
+  instead of a properly proportioned box. `Skeleton`'s own "no height
+  given" fallback (16px) was setting an explicit `height: 16px` inline
+  style, which silently blocked the CSS `aspect-ratio` property — it only
+  computes a dimension left as `auto`, never overrides one that's already
+  definite. Fixed by forcing `height: "auto"` whenever `aspectRatio` is
+  set. This also fixes `GallerySkeleton`, which uses `aspectRatio` for
+  every cell by default — its whole grid was rendering as thin bars, not
+  square image placeholders.
+- `ImageSkeleton`'s own `style` prop, when passed alongside `aspectRatio`,
+  used to silently drop the `aspectRatio`/height styling entirely instead
+  of merging with it.
+
 ## [1.1.0]
 
 ### Fixed
