@@ -61,9 +61,11 @@ export function getSkeletonDimensions({
     case "circle":
       // Always a perfect circle — `radius` is intentionally not applied here,
       // since any value other than "50%" would break the circular shape.
+      // `size` sets both axes at once; explicit `width`/`height` still win
+      // when passed directly (e.g. composites sizing a circle dot/icon).
       return {
-        width: size ?? 40,
-        height: size ?? 40,
+        width: width ?? size ?? 40,
+        height: height ?? size ?? 40,
         borderRadius: "50%",
         flexShrink: 0,
       };
