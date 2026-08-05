@@ -29,10 +29,9 @@ export interface SkeletonProps {
   height?: number | string;
 
   /**
-   * Shorthand for setting both `width` and `height` to the same value.
-   * Useful for circles and square thumbnails.
-   *
-   * Overrides `width` and `height` when provided.
+   * Sets the diameter when `variant="circle"`. Ignored for every other
+   * variant — use `width`/`height` directly there, since a default or
+   * rounded skeleton is rarely a forced square anyway.
    */
   size?: number | string;
 
