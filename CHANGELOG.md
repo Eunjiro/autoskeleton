@@ -7,6 +7,24 @@ follows [Semantic Versioning](https://semver.org/).
 For the version-by-version history before this file existed (`0.1.0` →
 `1.0.1`), see [docs/ROADMAP.md](https://github.com/Eunjiro/autoskeleton-web/blob/master/docs/ROADMAP.md).
 
+## [1.1.2]
+
+### Fixed
+
+- `Skeleton`'s `variant="circle"` ignored explicit `width`/`height` entirely
+  and always fell back to a hardcoded 40px unless `size` was passed.
+  Composites that size a circle via `width`/`height` instead of `size`
+  (`TimelineSkeleton`'s dot, `ChatMessageSkeleton`'s avatar,
+  `PricingCardSkeleton`'s checkmark icon) rendered oversized regardless of
+  the value requested. `width`/`height` now win when passed directly.
+- `TextSkeleton` with `lines={1}` always rendered its one line at 100%
+  width, ignoring `lastLineWidth`, `randomizeWidths`, and
+  `minLineWidth`/`maxLineWidth` entirely — `computeWidths` treated index 0
+  as "always full width" before ever checking whether it was also the last
+  (and only) line. A single-line block has no paragraph body, so its one
+  line is now treated as the last line, respecting the same sizing props a
+  multi-line paragraph's last line does.
+
 ## [1.1.1]
 
 ### Fixed
