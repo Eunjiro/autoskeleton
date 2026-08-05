@@ -16,12 +16,16 @@ function computeWidths(
   lastLineWidth: number | string,
 ): (number | string)[] {
   return Array.from({ length: lines }, (_, index) => {
-    // First line is always full width.
-    if (index === 0) return "100%";
+    const isLastLine = index === lines - 1;
+    // First line is always full width — but only when it isn't also the
+    // last line. A single-line block has no "paragraph" body, so its one
+    // line should behave like a last line (respecting lastLineWidth /
+    // randomization) instead of being forced to 100%.
+    if (index === 0 && !isLastLine) return "100%";
     // Randomize remaining lines when requested.
     if (randomize) return getRandomWidth(minLineWidth, maxLineWidth);
     // Last line is shorter by convention.
-    if (index === lines - 1) return lastLineWidth;
+    if (isLastLine) return lastLineWidth;
     return "100%";
   });
 }
