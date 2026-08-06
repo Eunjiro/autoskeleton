@@ -1,10 +1,17 @@
 ﻿# AutoSkeleton
 
+[![npm version](https://img.shields.io/npm/v/@gyojiro/autoskeleton-react.svg)](https://www.npmjs.com/package/@gyojiro/autoskeleton-react)
+[![npm downloads](https://img.shields.io/npm/dm/@gyojiro/autoskeleton-react.svg)](https://www.npmjs.com/package/@gyojiro/autoskeleton-react)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/@gyojiro/autoskeleton-react)](https://bundlephobia.com/package/@gyojiro/autoskeleton-react)
+[![license](https://img.shields.io/npm/l/@gyojiro/autoskeleton-react.svg)](./LICENSE)
+
 **Beautiful, composable loading skeletons for React.**
 
 A production-ready skeleton loading library built with React + TypeScript. Compose rich loading states from a handful of primitives, or drop in one of the 26+ ready-made components for your exact use case.
 
 **Lightweight · TypeScript First · Composable · Zero Dependencies · Tree-shakable**
+
+📖 **[Live docs, interactive demos & full API reference → autoskeleton.com](https://www.autoskeleton.com)**
 
 ---
 
@@ -434,6 +441,15 @@ All animations are automatically disabled when the user has `prefers-reduced-mot
   "./style.css": "./dist/index.css"
 }
 ```
+
+---
+
+## Links
+
+- 📖 [Live docs & interactive demos](https://www.autoskeleton.com)
+- 📦 [npm package](https://www.npmjs.com/package/@gyojiro/autoskeleton-react)
+- 🐙 [Source on GitHub](https://github.com/Eunjiro/autoskeleton)
+- 📝 [Changelog](./CHANGELOG.md)
 
 ---
 
