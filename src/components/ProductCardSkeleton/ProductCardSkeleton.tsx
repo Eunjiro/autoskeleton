@@ -26,6 +26,7 @@ import type { ProductCardSkeletonProps } from "./ProductCardSkeleton.types";
 export const ProductCardSkeleton = memo(function ProductCardSkeleton({
   imageHeight = 220,
   showRating = true,
+  ratingIconSize = 20,
   showButton = true,
   gap = 12,
   children,
@@ -44,9 +45,9 @@ export const ProductCardSkeleton = memo(function ProductCardSkeleton({
 
       {/* Rating */}
       {showRating && (
-        <SkeletonGroup direction="row" gap={4} align="center">
+        <SkeletonGroup direction="row" gap={6} align="center">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} width={16} height={16} radius="sm" />
+            <Skeleton key={i} width={ratingIconSize} height={ratingIconSize} radius="sm" />
           ))}
           <Skeleton width={40} height={13} />
         </SkeletonGroup>

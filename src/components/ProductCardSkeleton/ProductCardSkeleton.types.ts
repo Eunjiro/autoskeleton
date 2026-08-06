@@ -26,6 +26,12 @@ export interface ProductCardSkeletonProps
   showRating?: boolean;
 
   /**
+   * Width/height of each rating icon placeholder in pixels.
+   * @default 20
+   */
+  ratingIconSize?: number;
+
+  /**
    * Show an "Add to cart" button placeholder.
    * @default true
    */
