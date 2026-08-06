@@ -54,14 +54,12 @@ export const ProfileSkeleton = memo(function ProfileSkeleton({
         />
       </SkeletonGroup>
 
-      {/* Stats row */}
+      {/* Stats row — a naturally-sized, tightly-grouped cluster (matching how
+          stat counts actually sit next to each other in a real profile),
+          not stretched edge-to-edge across the card. The parent's
+          align="center" centers this row as a compact group. */}
       {statsCount > 0 && (
-        <SkeletonGroup
-          direction="row"
-          gap={0}
-          style={{ width: "100%" }}
-          justify="space-around"
-        >
+        <SkeletonGroup direction="row" gap={24}>
           {Array.from({ length: statsCount }).map((_, i) => (
             <SkeletonGroup key={i} gap={6} align="center">
               <Skeleton width={40} height={20} />
