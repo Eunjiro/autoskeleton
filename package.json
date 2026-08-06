@@ -26,11 +26,20 @@
   "keywords": [
     "react",
     "skeleton",
+    "skeleton-loader",
+    "skeleton-loading",
     "loading",
+    "loading-state",
     "placeholder",
+    "shimmer",
+    "content-loader",
     "typescript",
     "ui",
-    "component-library"
+    "ui-components",
+    "component-library",
+    "nextjs",
+    "vite",
+    "dark-mode"
   ],
   "scripts": {
     "dev": "vite",
