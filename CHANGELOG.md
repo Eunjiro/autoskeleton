@@ -7,6 +7,28 @@ follows [Semantic Versioning](https://semver.org/).
 For the version-by-version history before this file existed (`0.1.0` →
 `1.0.1`), see [docs/ROADMAP.md](https://github.com/Eunjiro/autoskeleton-web/blob/master/docs/ROADMAP.md).
 
+## [1.1.3]
+
+### Fixed
+
+- `ProductCardSkeleton`'s 5 rating-row placeholders were hardcoded at
+  16x16 with a 4px gap and no prop to adjust them — close enough to the
+  surrounding text line heights that the row read as a cramped smudge
+  instead of a distinct star rating. Bumped the default to 20x20 with
+  a 6px gap, and added a `ratingIconSize` prop.
+- `ProfileSkeleton`'s stats row (`statsCount`) used
+  `justify="space-around"` at `width: "100%"`, spreading the stat
+  columns (Posts / Followers / Following) across the full card width
+  instead of clustering them together the way real profile stats sit
+  next to each other. It now sizes naturally and centers as a compact
+  group, matching typical profile UIs.
+
+### Docs
+
+- Clarified that `size` only applies to `variant="circle"` — the
+  JSDoc previously described it as a general width/height shorthand
+  with no such qualification.
+
 ## [1.1.2]
 
 ### Fixed
